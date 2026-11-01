@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#170815">
+<meta name="format-detection" content="telephone=no">
+<title>AstroQuack · astrologia con le piume</title>
+<meta name="description" content="AstroQuack: astrologia con le piume. Il cielo giorno per giorno, il calendario dei transiti, le lune del mese e il calcolo del tema natale con Swiss Ephemeris.">
+<link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/instrument-serif-latin-400-italic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<aside class="rail" aria-label="Navigazione">
+  <a class="brand" href="#home" aria-label="AstroQuack, torna all’inizio"><svg xmlns="http://www.w3.org/2000/svg" viewBox="122 132 362 296" class="logo" role="img" aria-label="Logo AstroQuack">
+<path fill="#FADBEB" d="M 395.19 311.27 C 395.19 353.83 360.69 388.33 318.12 388.33 C 275.57 388.33 241.06 353.83 241.06 311.27 C 241.06 268.71 275.57 234.21 318.12 234.21 C 360.69 234.21 395.19 268.71 395.19 311.27 "/>
+<path fill="#E3619F" d="M 223.39 203.59 L 175.82 164.04 L 133.61 164.04 L 151.21 178.77 L 204.32 223.21 C 210.64 215.17 214.06 211.24 223.39 203.59 "/>
+<path fill="#E3619F" d="M 311.39 276.76 L 223.39 203.59 C 220.50 206.64 210.96 211.24 204.32 223.21 L 297.98 301.59 L 450.43 172.98 L 450.43 164.04 Z M 311.39 276.76 "/>
+<path fill="#E3619F" d="M 130.63 416.80 C 130.63 416.80 150.99 414.31 150.99 381.04 L 150.99 178.77 L 163.69 189.21 L 163.69 381.04 C 163.69 381.04 161.92 408.35 181.28 419.28 Z M 130.63 416.80 "/>
+<path fill="#E3619F" d="M 411.59 248.73 C 411.51 248.64 411.49 248.54 411.44 248.45 L 297.98 335.61 L 297.98 350.17 L 415.37 260.50 C 414.01 256.67 414.33 251.93 411.59 248.73 "/>
+<path fill="#E3619F" d="M 450.43 394.94 C 449.44 378.56 450.43 215.68 450.43 215.68 L 409.52 249.93 C 412.14 255.05 413.49 257.95 414.49 261.18 L 432.05 244.98 L 432.05 395.44 C 432.05 395.44 434.54 407.36 407.72 416.80 L 474.76 416.80 C 474.76 416.80 451.42 411.33 450.43 394.94 "/>
+<path fill="#F4ACCD" d="M 334.00 386.97 C 299.38 385.33 267.48 365.48 253.08 332.73 C 245.5 315.49 243.84 297.10 247.18 279.66 C 239.17 298.78 238.70 321.02 247.71 341.50 C 262.69 375.55 298.95 393.61 334.00 386.97 "/>
+<path fill="#FADBEB" d="M 322.35 157.42 C 322.26 156.08 321.80 154.93 320.64 154.15 C 316.84 152.16 316.36 158.55 319.25 159.80 C 320.92 160.74 322.44 159.10 322.35 157.42 M 308.31 200.09 C 314.56 200.29 321.42 197.86 321.78 190.63 C 321.72 185.23 319.11 179.62 312.80 180.88 C 305.42 181.67 298.28 188.68 290.75 185.14 C 290.63 185.03 290.44 185.12 290.53 185.30 C 291.32 188.66 293.96 191.06 296.65 193.00 C 297.57 193.76 292.35 192.46 291.99 192.41 C 291.26 192.21 291.29 192.75 291.54 193.28 C 291.93 194.29 292.82 194.87 293.56 195.57 C 297.47 199.37 303.07 199.94 308.31 200.09 M 325.84 169.75 C 323.40 171.38 324.26 174.06 326.02 175.87 C 329.89 180.64 335.11 186.94 332.57 193.43 C 328.00 205.65 313.51 206.04 302.39 206.07 C 296.10 205.71 289.13 205.58 284.03 201.39 C 277.47 196.48 274.07 191.24 272.33 183.22 C 271.53 179.87 270.87 176.44 270.81 172.98 C 270.85 170.30 274.01 170.79 275.06 172.57 C 277.84 176.33 282.33 179.76 287.25 178.52 C 290.54 177.66 293.52 175.94 296.88 175.28 C 299.21 174.73 301.57 174.50 303.95 174.41 C 304.80 174.48 307.80 174.61 306.48 173.10 C 300.26 171.70 297.00 165.39 297.79 159.32 C 297.98 157.51 298.35 155.74 298.90 154.01 C 299.00 153.67 298.79 153.73 298.60 153.75 C 297.44 153.82 296.08 153.39 295.53 152.33 C 296.17 152.19 296.96 152.44 297.66 152.41 C 296.16 151.67 294.80 149.87 295.21 148.19 C 296.72 149.10 298.33 150.10 300.19 150.33 C 301.20 150.54 301.92 149.69 302.52 149.01 C 303.85 147.52 305.50 146.47 307.30 145.65 C 314.46 142.18 323.79 145.26 327.39 152.37 C 328.35 154.10 328.59 156.10 329.53 157.83 C 328.48 159.14 328.90 160.92 328.06 162.30 C 326.66 164.44 322.86 167.30 325.84 169.75 "/>
+<path fill="#EA5F9E" d="M 325.84 169.75 C 322.86 167.29 326.66 164.45 328.06 162.30 C 328.90 160.92 328.48 159.14 329.53 157.83 C 330.37 159.02 331.56 160.01 333.08 159.86 C 335.07 159.76 337.04 159.53 338.97 159.00 C 340.57 159.01 339.52 161.56 339.20 162.41 C 338.32 164.41 336.81 165.77 334.78 166.57 C 336.17 166.74 337.14 167.35 337.57 168.68 C 333.62 168.38 329.54 168.30 325.84 169.75 "/>
+<path fill="#F4ACCD" d="M 308.31 200.09 C 303.07 199.94 297.47 199.37 293.56 195.57 C 292.82 194.87 291.93 194.29 291.54 193.28 C 291.30 192.75 291.25 192.21 291.99 192.41 C 292.25 192.45 297.62 193.76 296.65 193.00 C 293.96 191.06 291.31 188.66 290.53 185.29 C 290.46 185.13 290.61 185.03 290.75 185.14 C 299.06 188.96 306.67 180.37 315.01 180.75 C 319.95 180.87 321.76 186.48 321.78 190.63 C 321.42 197.86 314.57 200.28 308.31 200.09 "/>
+<path fill="#EA5F9E" d="M 321.58 156.69 C 321.65 155.73 320.20 155.20 320.13 156.36 C 320.06 157.31 321.53 157.86 321.58 156.69 M 322.35 157.42 C 322.44 159.10 320.92 160.74 319.25 159.80 C 316.36 158.55 316.84 152.16 320.64 154.15 C 321.80 154.93 322.26 156.08 322.35 157.42 "/>
+<path fill="#FEF9FC" d="M 321.58 156.69 C 321.53 157.85 320.06 157.31 320.13 156.36 C 320.20 155.20 321.65 155.73 321.58 156.69 "/>
+<path fill="#F4ACCD" d="M 345.66 398.44 C 295.19 411.42 244.01 382.07 231.36 332.88 C 218.71 283.69 249.37 233.30 299.84 220.32 C 312.93 216.95 326.07 216.44 338.58 218.37 C 318.86 211.10 296.66 209.55 274.57 215.24 C 217.94 229.80 183.55 286.35 197.74 341.53 C 211.93 396.71 269.35 429.65 325.97 415.08 C 348.06 409.40 366.76 397.33 380.52 381.45 C 370.50 389.18 358.75 395.07 345.66 398.44 "/>
+</svg><span>AstroQuack</span></a>
+  <nav class="nav">
+    <a href="#cielo"><span class="g" aria-hidden="true">☉&#xFE0E;</span>Il cielo</a>
+    <a href="#calendario"><span class="g" aria-hidden="true">♂&#xFE0E;</span><span class="lbl-l">Calendario</span><span class="lbl-s">Mese</span></a>
+    <a href="#lune" class="m-hide"><span class="g" aria-hidden="true">☾&#xFE0E;</span>Le lune</a>
+    <a href="#chi-sono" class="m-hide"><span class="g" aria-hidden="true">♀&#xFE0E;</span>Chi sono</a>
+    <a href="#tema"><span class="g" aria-hidden="true">♃&#xFE0E;</span><span class="lbl-l">Tema natale</span><span class="lbl-s">Tema</span></a>
+    <a href="#sinastria" class="m-hide"><span class="g" aria-hidden="true">⚭&#xFE0E;</span>Sinastria</a>
+    <a href="#blog"><span class="g" aria-hidden="true">☿&#xFE0E;</span>Blog</a>
+    <a href="#contattami" class="m-hide"><span class="g" aria-hidden="true">♄&#xFE0E;</span>Contattami</a>
+    <a href="#social" class="m-hide"><span class="g" aria-hidden="true">♅&#xFE0E;</span>Social</a>
+    <a href="#eventi" class="m-hide"><span class="g" aria-hidden="true">☽&#xFE0E;</span>Eventi</a>
+    <button type="button" class="nav-more" id="navMore" aria-haspopup="dialog" aria-controls="menuDlg"><span class="g" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span>Menu</button>
+  </nav>
+  <div class="rail-sky" id="railSky"></div>
+  <button class="theme-btn" id="themeBtn" type="button">Pagine scure</button>
+</aside>
+
+<div class="page">
+  <!-- HERO -->
+  <header class="hero night" id="home">
+    <div class="sky-art" aria-hidden="true">
+      <img class="bgimg" fetchpriority="high" decoding="async" src="assets/img/cielo.jpg" alt="">
+      <div class="orrery" id="orrery">
+        <img class="ring" src="assets/img/astrolabio.webp" alt="">
+        <img class="duck" src="assets/img/anas-quackia.webp" alt="">
+        <img class="moon" src="assets/img/luna.webp" alt="">
+      </div>
+    </div>
+    <div class="hero-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="122 132 362 296" class="logo" role="img" aria-label="Logo AstroQuack">
+<path fill="#FADBEB" d="M 395.19 311.27 C 395.19 353.83 360.69 388.33 318.12 388.33 C 275.57 388.33 241.06 353.83 241.06 311.27 C 241.06 268.71 275.57 234.21 318.12 234.21 C 360.69 234.21 395.19 268.71 395.19 311.27 "/>
+<path fill="#E3619F" d="M 223.39 203.59 L 175.82 164.04 L 133.61 164.04 L 151.21 178.77 L 204.32 223.21 C 210.64 215.17 214.06 211.24 223.39 203.59 "/>
+<path fill="#E3619F" d="M 311.39 276.76 L 223.39 203.59 C 220.50 206.64 210.96 211.24 204.32 223.21 L 297.98 301.59 L 450.43 172.98 L 450.43 164.04 Z M 311.39 276.76 "/>
+<path fill="#E3619F" d="M 130.63 416.80 C 130.63 416.80 150.99 414.31 150.99 381.04 L 150.99 178.77 L 163.69 189.21 L 163.69 381.04 C 163.69 381.04 161.92 408.35 181.28 419.28 Z M 130.63 416.80 "/>
+<path fill="#E3619F" d="M 411.59 248.73 C 411.51 248.64 411.49 248.54 411.44 248.45 L 297.98 335.61 L 297.98 350.17 L 415.37 260.50 C 414.01 256.67 414.33 251.93 411.59 248.73 "/>
+<path fill="#E3619F" d="M 450.43 394.94 C 449.44 378.56 450.43 215.68 450.43 215.68 L 409.52 249.93 C 412.14 255.05 413.49 257.95 414.49 261.18 L 432.05 244.98 L 432.05 395.44 C 432.05 395.44 434.54 407.36 407.72 416.80 L 474.76 416.80 C 474.76 416.80 451.42 411.33 450.43 394.94 "/>
+<path fill="#F4ACCD" d="M 334.00 386.97 C 299.38 385.33 267.48 365.48 253.08 332.73 C 245.5 315.49 243.84 297.10 247.18 279.66 C 239.17 298.78 238.70 321.02 247.71 341.50 C 262.69 375.55 298.95 393.61 334.00 386.97 "/>
+<path fill="#FADBEB" d="M 322.35 157.42 C 322.26 156.08 321.80 154.93 320.64 154.15 C 316.84 152.16 316.36 158.55 319.25 159.80 C 320.92 160.74 322.44 159.10 322.35 157.42 M 308.31 200.09 C 314.56 200.29 321.42 197.86 321.78 190.63 C 321.72 185.23 319.11 179.62 312.80 180.88 C 305.42 181.67 298.28 188.68 290.75 185.14 C 290.63 185.03 290.44 185.12 290.53 185.30 C 291.32 188.66 293.96 191.06 296.65 193.00 C 297.57 193.76 292.35 192.46 291.99 192.41 C 291.26 192.21 291.29 192.75 291.54 193.28 C 291.93 194.29 292.82 194.87 293.56 195.57 C 297.47 199.37 303.07 199.94 308.31 200.09 M 325.84 169.75 C 323.40 171.38 324.26 174.06 326.02 175.87 C 329.89 180.64 335.11 186.94 332.57 193.43 C 328.00 205.65 313.51 206.04 302.39 206.07 C 296.10 205.71 289.13 205.58 284.03 201.39 C 277.47 196.48 274.07 191.24 272.33 183.22 C 271.53 179.87 270.87 176.44 270.81 172.98 C 270.85 170.30 274.01 170.79 275.06 172.57 C 277.84 176.33 282.33 179.76 287.25 178.52 C 290.54 177.66 293.52 175.94 296.88 175.28 C 299.21 174.73 301.57 174.50 303.95 174.41 C 304.80 174.48 307.80 174.61 306.48 173.10 C 300.26 171.70 297.00 165.39 297.79 159.32 C 297.98 157.51 298.35 155.74 298.90 154.01 C 299.00 153.67 298.79 153.73 298.60 153.75 C 297.44 153.82 296.08 153.39 295.53 152.33 C 296.17 152.19 296.96 152.44 297.66 152.41 C 296.16 151.67 294.80 149.87 295.21 148.19 C 296.72 149.10 298.33 150.10 300.19 150.33 C 301.20 150.54 301.92 149.69 302.52 149.01 C 303.85 147.52 305.50 146.47 307.30 145.65 C 314.46 142.18 323.79 145.26 327.39 152.37 C 328.35 154.10 328.59 156.10 329.53 157.83 C 328.48 159.14 328.90 160.92 328.06 162.30 C 326.66 164.44 322.86 167.30 325.84 169.75 "/>
+<path fill="#EA5F9E" d="M 325.84 169.75 C 322.86 167.29 326.66 164.45 328.06 162.30 C 328.90 160.92 328.48 159.14 329.53 157.83 C 330.37 159.02 331.56 160.01 333.08 159.86 C 335.07 159.76 337.04 159.53 338.97 159.00 C 340.57 159.01 339.52 161.56 339.20 162.41 C 338.32 164.41 336.81 165.77 334.78 166.57 C 336.17 166.74 337.14 167.35 337.57 168.68 C 333.62 168.38 329.54 168.30 325.84 169.75 "/>
+<path fill="#F4ACCD" d="M 308.31 200.09 C 303.07 199.94 297.47 199.37 293.56 195.57 C 292.82 194.87 291.93 194.29 291.54 193.28 C 291.30 192.75 291.25 192.21 291.99 192.41 C 292.25 192.45 297.62 193.76 296.65 193.00 C 293.96 191.06 291.31 188.66 290.53 185.29 C 290.46 185.13 290.61 185.03 290.75 185.14 C 299.06 188.96 306.67 180.37 315.01 180.75 C 319.95 180.87 321.76 186.48 321.78 190.63 C 321.42 197.86 314.57 200.28 308.31 200.09 "/>
+<path fill="#EA5F9E" d="M 321.58 156.69 C 321.65 155.73 320.20 155.20 320.13 156.36 C 320.06 157.31 321.53 157.86 321.58 156.69 M 322.35 157.42 C 322.44 159.10 320.92 160.74 319.25 159.80 C 316.36 158.55 316.84 152.16 320.64 154.15 C 321.80 154.93 322.26 156.08 322.35 157.42 "/>
+<path fill="#FEF9FC" d="M 321.58 156.69 C 321.53 157.85 320.06 157.31 320.13 156.36 C 320.20 155.20 321.65 155.73 321.58 156.69 "/>
+<path fill="#F4ACCD" d="M 345.66 398.44 C 295.19 411.42 244.01 382.07 231.36 332.88 C 218.71 283.69 249.37 233.30 299.84 220.32 C 312.93 216.95 326.07 216.44 338.58 218.37 C 318.86 211.10 296.66 209.55 274.57 215.24 C 217.94 229.80 183.55 286.35 197.74 341.53 C 211.93 396.71 269.35 429.65 325.97 415.08 C 348.06 409.40 366.76 397.33 380.52 381.45 C 370.50 389.18 358.75 395.07 345.66 398.44 "/>
+</svg></div>
+    <div class="hero-copy">
+      <p class="coords" id="heroDate">41°54′ N · 12°29′ E</p>
+      <h1><span>Astro</span><span class="i">Quack</span></h1>
+      <p class="hero-sub">Astrologia con le piume. Transiti, miti e paperelle, raccontati ogni settimana senza prendersi troppo sul serio.</p>
+      <div class="now" id="heroNow"></div>
+      <div class="btns">
+        <a class="btn" href="#tema">Calcola il tuo tema natale</a>
+        <a class="btn ghost" href="#contattami">Scrivimi</a>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#cielo"><i></i>scorri</a>
+  </header>
+
+  <!-- CIELO -->
+  <section class="block night" id="cielo" aria-labelledby="cieloT">
+    <div class="wrap">
+      <div class="reveal">
+        <h2 id="cieloT">Il cielo, <em>giorno per giorno</em></h2>
+        <p class="lede">Dove si trovano i pianeti, in che segno e a che grado. Scegli un giorno per vedere come cambia la ruota.</p>
+      </div>
+      <div class="sky-grid reveal">
+        <div class="wheel-wrap" id="skyWheel" role="img" aria-label="Ruota zodiacale con i pianeti del giorno scelto"></div>
+        <div>
+          <div class="daynav">
+            <button type="button" id="dayPrev" aria-label="Giorno precedente">‹</button>
+            <input type="date" id="dayPick" aria-label="Scegli il giorno">
+            <button type="button" id="dayNext" aria-label="Giorno successivo">›</button>
+            <button type="button" class="linkbtn" id="dayToday">Oggi</button>
+          </div>
+          <div class="moonline" id="moonLine"></div>
+          <ul class="plist" id="skyList"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALENDARIO DEI TRANSITI -->
+  <section class="block" id="calendario" aria-labelledby="calT">
+    <div class="wrap">
+      <div class="reveal">
+        <h2 id="calT">Il calendario dei <em>transiti</em></h2>
+        <p class="lede">Mese per mese: la Luna nei segni, le fasi lunari, gli ingressi dei pianeti, le retrogradazioni e gli aspetti esatti, all’ora di Roma.</p>
+      </div>
+      <div class="cal-wrap">
+        <div>
+          <div class="cal-bar">
+            <button type="button" class="navb" id="calPrev" aria-label="Mese precedente">‹</button>
+            <h3 id="calTitle" aria-live="polite"></h3>
+            <button type="button" class="navb" id="calNext" aria-label="Mese successivo">›</button>
+            <button type="button" class="linkbtn" id="calToday">Oggi</button>
+          </div>
+          <div class="cal-filters" id="calFilters" aria-label="Mostra nel calendario">
+            <button type="button" class="chipf" data-f="moon" aria-pressed="true">Luna nei segni</button>
+            <button type="button" class="chipf" data-f="phase" aria-pressed="true">Fasi lunari</button>
+            <button type="button" class="chipf" data-f="ingress" aria-pressed="true">Ingressi</button>
+            <button type="button" class="chipf" data-f="station" aria-pressed="true">Retrogradazioni</button>
+            <button type="button" class="chipf" data-f="aspect" aria-pressed="true">Aspetti</button>
+          </div>
+          <div class="mcal">
+            <div class="mcal-head"><span>lun</span><span>mar</span><span>mer</span><span>gio</span><span>ven</span><span>sab</span><span>dom</span></div>
+            <div class="mcal-grid" id="calGrid"><p class="hint" style="grid-column:1/-1;padding:20px">Calcolo dei transiti…</p></div>
+          </div>
+          <div class="cal-legend"><span style="--c:color-mix(in srgb,var(--pink) 40%,transparent)">Fasi lunari</span><span style="--c:var(--rose)">Ingressi</span><span style="--c:#F2C46B">Retrogradazioni</span><span style="--c:var(--ink-soft)">Aspetti e Luna</span></div>
+        </div>
+        <aside class="cal-side">
+          <div class="cal-card" aria-live="polite"><h4 id="dayTitle"></h4><p class="sub" id="daySub"></p><ul class="day-list" id="dayList"></ul></div>
+          <div class="cal-card"><h4>Retrogradi nel mese</h4><p class="sub">Pianeti in moto retrogrado per almeno una parte del mese.</p><ul class="retro-list" id="retroList"></ul></div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- LUNE NUOVE E PIENE -->
+  <section class="block night" id="lune" aria-labelledby="luneT">
+    <div class="wrap">
+      <div class="reveal">
+        <h2 id="luneT">Le <em>lune</em> del mese</h2>
+        <p class="lede">Lune nuove e piene, mese per mese: segno, grado e orario di Roma, calcolati con Swiss Ephemeris.</p>
+      </div>
+      <div class="lune-next reveal" id="luneNext"></div>
+      <div class="lmonth reveal" aria-labelledby="lmTitle">
+        <div class="cal-bar">
+          <button type="button" class="navb" id="lmPrev" aria-label="Mese precedente">‹</button>
+          <h3 id="lmTitle" aria-live="polite"></h3>
+          <button type="button" class="navb" id="lmNext" aria-label="Mese successivo">›</button>
+          <button type="button" class="linkbtn" id="lmToday">Questo mese</button>
+        </div>
+        <p class="lm-sum" id="lmSum"></p>
+        <div class="lm-head" aria-hidden="true"><span>lun</span><span>mar</span><span>mer</span><span>gio</span><span>ven</span><span>sab</span><span>dom</span></div>
+        <div class="lm-grid" id="lmGrid" role="list"></div>
+        <div class="lm-bar" id="lmBar" aria-hidden="true"></div>
+        <div class="lm-bar-l" aria-hidden="true"><span>illuminazione della Luna giorno per giorno</span><span>alle 12:00 di Roma</span></div>
+      </div>
+      <div class="cal-bar">
+        <button type="button" class="navb" id="lunePrev" aria-label="Anno precedente">‹</button>
+        <h3 id="luneTitle" aria-live="polite"></h3>
+        <button type="button" class="navb" id="luneNextY" aria-label="Anno successivo">›</button>
+        <button type="button" class="linkbtn" id="luneToday">Quest’anno</button>
+      </div>
+      <div class="lune-year" id="luneYear"></div>
+    </div>
+  </section>
+
+  <!-- CHI SONO -->
+  <section class="block" id="chi-sono" aria-labelledby="chiT">
+    <div class="wrap">
+      <div class="about reveal">
+        <figure class="portrait">
+          <img loading="lazy" decoding="async" src="assets/img/ritratto.webp" alt="Tavola illustrata della costellazione Anas Quackia: tredici stelle unite a formare una paperella dentro un cerchio graduato" width="720" height="900">
+          <figcaption>Anas Quackia, la costellazione di casa: tredici stelle, una paperella.</figcaption>
+        </figure>
+        <div>
+          <h2 id="chiT">Chi <em>sono</em></h2>
+          <p class="lede">Ciao! Dietro AstroQuack ci sono io: appassionata di astrologia, mitologia e storie di donne che hanno cambiato le cose.</p>
+          <p>Ho cominciato leggendo i transiti agli amici davanti a un caffè e non ho più smesso. Qui il cielo si legge come si racconta una storia: con curiosità, un po’ di ironia e qualche paperella di gomma sempre a portata di mano.</p>
+          <p>Niente predizioni catastrofiche, solo spunti per guardarti dentro e capire che aria tira lassù.</p>
+          <p class="quote">«Il cielo non decide al posto tuo. Però ti dà ottimi argomenti di conversazione.»</p>
+        </div>
+      </div>
+
+      <div class="rub-head reveal">
+        <h2>Cosa <em>faccio</em></h2>
+        <p class="lede" style="margin:0;max-width:40ch">Le rubriche su Instagram, TikTok e Spotify, con il loro ritmo d’uscita.</p>
+      </div>
+      <div class="rubriche reveal">
+        <a class="rub" href="#blog" data-goto-rub="paper-news"><span class="f">settimanale e mensile</span><h3>Paper-News</h3><p>I transiti della settimana e del mese in un reel: chi entra in quale segno e cosa ci aspetta.</p></a>
+        <a class="rub" href="#blog" data-goto-rub="paperelle-in-love"><span class="f">con Luna e Venere</span><h3>Paperelle in Love</h3><p>Venere, la Luna e i transiti che parlano d’amore. Consigli per il cuore, segno per segno.</p></a>
+        <a class="rub" href="#blog" data-goto-rub="born-in-the-quack"><span class="f">mensile</span><h3>Born in the Quack</h3><p>Il segno del mese raccontato con una playlist e un piatto pensato per lui.</p></a>
+        <a class="rub" href="#blog" data-goto-rub="superquack"><span class="f">mensile, il mercoledì</span><h3>SuperQuack</h3><p>Mitologia, storia, politica, figure di donne, femminismi e animali dello zodiaco. Anche in diretta e su Spotify.</p></a>
+        <a class="rub" href="#blog" data-goto-rub="monday-quack"><span class="f">ogni lunedì</span><h3>Monday Quack</h3><p>Il box domande «Lunedì feels, quack», con la playlist per cominciare la settimana.</p></a>
+        <a class="rub" href="#blog" data-goto-rub="la-posta-di-mara"><span class="f">ogni due settimane</span><h3>La posta di Mara</h3><p>Le vostre domande sul cielo, inviate per email, con risposte dedicate.</p></a>
+        <a class="rub" href="#blog" data-goto-rub="asr-papere"><span class="f">ogni settimana</span><h3>ASR Papere</h3><p>L’oroscopo giallorosso: compleanni dei giocatori e pronostici astrali per le partite.</p></a>
+        <a class="rub" href="#contattami"><span class="f">su richiesta</span><h3>Il tuo tema</h3><p>Una lettura del tema natale, personale e senza fretta. Scrivimi per chiederla.</p></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEMA NATALE -->
+  <section class="block" id="tema" aria-labelledby="temaT">
+    <div class="wrap">
+      <div class="reveal">
+        <h2 id="temaT">Il tuo <em>tema natale</em></h2>
+        <p class="lede">Data, ora e luogo di nascita: la carta si calcola con Swiss Ephemeris, lo stesso motore di riferimento di Astro-Seek, con pianeti, Chirone, Lilith, nodi, case e linee degli aspetti.</p>
+      </div>
+      <div class="natal">
+        <form class="form" id="natalForm" novalidate>
+          <div class="field"><label for="fName">Nome</label><input id="fName" autocomplete="given-name" placeholder="Facoltativo"></div>
+          <div class="row2">
+            <div class="field"><label for="fDate">Data di nascita</label><input id="fDate" type="date" required min="1800-01-01" max="2399-12-31"></div>
+            <div class="field"><label for="fTime">Ora</label><input id="fTime" type="time" required value="12:00"></div>
+          </div>
+          <label class="check"><input type="checkbox" id="fNoTime"> Non conosco l’ora di nascita</label>
+          <div class="field">
+            <label for="fPlace">Luogo di nascita</label>
+            <div class="ac-wrap"><input id="fPlace" placeholder="Inizia a scrivere, es. Roma" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="placeAc">
+            <ul class="ac" id="placeAc" role="listbox" aria-label="Luoghi trovati" hidden></ul></div>
+            <datalist id="cityList"></datalist>
+            <p class="hint" id="placeHint">Tutti i comuni italiani e oltre 7.000 città del mondo.</p>
+          </div>
+          <details class="manual" id="manualBox">
+            <summary>Il tuo luogo non c’è? Inserisci le coordinate</summary>
+            <div class="field"><label for="fPaste">Incolla le coordinate</label><input id="fPaste" autocomplete="off" placeholder="es. 41n54 12e29 oppure 41°54′ N 12°29′ E">
+              <p class="hint">Accetta la notazione di astro.com e Astro-Seek e compila i campi qui sotto.</p></div>
+            <fieldset class="coord"><legend>Latitudine</legend><div class="crow">
+              <input id="latD" inputmode="decimal" aria-label="Latitudine, gradi" placeholder="41"><span>°</span>
+              <input id="latM" inputmode="decimal" aria-label="Latitudine, primi" placeholder="54"><span>′</span>
+              <input id="latS" inputmode="decimal" aria-label="Latitudine, secondi" placeholder="0"><span>″</span>
+              <select id="latH" aria-label="Emisfero"><option value="N">N</option><option value="S">S</option></select></div></fieldset>
+            <fieldset class="coord"><legend>Longitudine</legend><div class="crow">
+              <input id="lonD" inputmode="decimal" aria-label="Longitudine, gradi" placeholder="12"><span>°</span>
+              <input id="lonM" inputmode="decimal" aria-label="Longitudine, primi" placeholder="29"><span>′</span>
+              <input id="lonS" inputmode="decimal" aria-label="Longitudine, secondi" placeholder="0"><span>″</span>
+              <select id="lonH" aria-label="Est o Ovest"><option value="E">E</option><option value="O">O</option></select></div></fieldset>
+            <p class="conv" id="coordConv" aria-live="polite"></p>
+            <div class="field"><label for="fTz">Fuso orario</label><select id="fTz"></select></div>
+            <p class="hint">Gradi e primi, come su astro.com: 41°54′ equivale a 41,9°, non a 41,54°. Per un valore decimale scrivilo nei gradi e lascia vuoti primi e secondi.</p>
+          </details>
+          <details class="settings" id="settingsBox">
+            <summary>Impostazioni di calcolo</summary>
+            <div class="row2">
+              <div class="field"><label for="sSys">Case</label><select id="sSys"><option value="P">Placidus</option><option value="K">Koch</option><option value="R">Regiomontano</option><option value="C">Campano</option><option value="O">Porfirio</option><option value="E">Equal</option><option value="W">Whole Sign</option></select></div>
+              <div class="field"><label for="sNode">Nodo lunare</label><select id="sNode"><option value="true">Vero</option><option value="mean">Medio</option></select></div>
+            </div>
+            <div class="field"><label for="sLil">Lilith</label><select id="sLil"><option value="mean">Media</option><option value="oscu">Osculante</option></select></div>
+            <label class="check"><input type="checkbox" id="sMinor"> Aspetti minori</label>
+            <label class="check"><input type="checkbox" id="sExtra"> Parte di Fortuna e Vertice</label>
+            <label class="check"><input type="checkbox" id="sAst"> Asteroidi (Cerere, Pallade, Giunone, Vesta)</label>
+            <p class="hint">Allinea queste scelte a quelle di Astro-Seek per ottenere gli stessi valori.</p>
+          </details>
+          <p class="err" id="formErr" role="alert"></p>
+          <button class="btn" type="submit" disabled>Disegna il tema natale</button>
+          <p class="engine" id="engineState">Avvio di Swiss Ephemeris…</p>
+        </form>
+        <div id="natalOut">
+          <div class="empty"><div class="wheel-wrap" id="emptyWheel"></div><p>Compila il modulo: qui comparirà la tua carta del cielo.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SINASTRIA -->
+  <section class="block" id="sinastria" aria-labelledby="synT">
+    <div class="wrap">
+      <div class="reveal">
+        <h2 id="synT">La <em>sinastria</em></h2>
+        <p class="lede">Due temi a confronto: i pianeti di una persona sulla carta dell’altra, con gli aspetti che li legano. Per Paperelle in Love e non solo.</p>
+      </div>
+      <form class="syn form" id="synForm" novalidate>
+        <div class="syn-grid">
+          <fieldset class="syn-p">
+            <legend>Prima persona</legend>
+            <div class="field"><label for="saName">Nome</label><input id="saName" autocomplete="off" placeholder="Facoltativo"></div>
+            <div class="row2">
+              <div class="field"><label for="saDate">Data di nascita</label><input id="saDate" type="date" min="1800-01-01" max="2399-12-31"></div>
+              <div class="field"><label for="saTime">Ora</label><input id="saTime" type="time" value="12:00"></div>
+            </div>
+            <label class="check"><input type="checkbox" id="saNoTime"> <span>Non conosco l’ora</span></label>
+            <div class="field"><label for="saPlace">Luogo di nascita</label>
+              <div class="ac-wrap"><input id="saPlace" placeholder="Inizia a scrivere, es. Milano" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="saAc"><ul class="ac" id="saAc" role="listbox" aria-label="Luoghi trovati" hidden></ul></div>
+              <p class="hint" id="saHint">Comuni italiani e città del mondo.</p></div>
+          </fieldset>
+          <fieldset class="syn-p">
+            <legend>Seconda persona</legend>
+            <div class="field"><label for="sbName">Nome</label><input id="sbName" autocomplete="off" placeholder="Facoltativo"></div>
+            <div class="row2">
+              <div class="field"><label for="sbDate">Data di nascita</label><input id="sbDate" type="date" min="1800-01-01" max="2399-12-31"></div>
+              <div class="field"><label for="sbTime">Ora</label><input id="sbTime" type="time" value="12:00"></div>
+            </div>
+            <label class="check"><input type="checkbox" id="sbNoTime"> <span>Non conosco l’ora</span></label>
+            <div class="field"><label for="sbPlace">Luogo di nascita</label>
+              <div class="ac-wrap"><input id="sbPlace" placeholder="Inizia a scrivere, es. Milano" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sbAc"><ul class="ac" id="sbAc" role="listbox" aria-label="Luoghi trovati" hidden></ul></div>
+              <p class="hint" id="sbHint">Comuni italiani e città del mondo.</p></div>
+          </fieldset>
+        </div>
+        <p class="err" id="synErr" role="alert"></p>
+        <button class="btn" type="submit" disabled>Confronta i due temi</button>
+      </form>
+      <div id="synOut"></div>
+    </div>
+  </section>
+
+  <!-- BLOG -->
+  <section class="block" id="blog" aria-labelledby="blogT">
+    <div class="wrap">
+      <div class="blog-top reveal">
+        <div>
+          <h2 id="blogT">Il blog delle <em>rubriche</em></h2>
+          <p class="lede">Paper-News, Paperelle in Love, SuperQuack e tutte le altre: le rubriche di AstroQuack, da leggere con calma.</p>
+        </div>
+      </div>
+      <div class="filters" id="blogFilter" aria-label="Filtra per rubrica"></div>
+      <div class="blog-grid" id="blogGrid"></div>
+      <div class="blog-more" style="display:flex;gap:10px;flex-wrap:wrap"><button type="button" class="btn ghost" id="blogMore" hidden>Mostra altri articoli</button><a class="btn ghost" href="/blog">Tutti gli articoli</a></div>
+      <div class="blog-admin" id="blogAdmin" hidden>
+        <h3>Il tuo pannello</h3>
+        <p class="hint">Visibile solo a te: scrivi articoli, aggiorna eventi e impostazioni dal pannello di gestione.</p>
+        <div class="save-row"><a class="btn" href="/admin/#/collections/articoli/new">Scrivi un articolo</a><a class="btn ghost" href="/admin/">Apri il pannello</a></div>
+        <ul class="draft-list" id="draftList" hidden></ul><button type="button" id="newPost" hidden></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATTAMI -->
+  <section class="block" id="contattami" aria-labelledby="contT">
+    <div class="wrap">
+      <div class="reveal">
+        <h2 id="contT"><em>Scrivimi</em></h2>
+        <p class="lede">Raccontami chi sei e cosa ti incuriosisce del cielo: ti rispondo personalmente.</p>
+      </div>
+      <div class="contact">
+        <figure><img loading="lazy" decoding="async" src="assets/img/scrivimi.webp" alt="Tavola illustrata: una busta disegnata come costellazione dentro un cerchio graduato, con una piccola luna crescente" width="720" height="900"></figure>
+        <div class="form">
+          <form id="contactForm" novalidate>
+            <div class="row2">
+              <div class="field"><label for="cName">Nome</label><input id="cName" autocomplete="name" maxlength="80" required></div>
+              <div class="field"><label for="cEmail">Email</label><input id="cEmail" type="email" autocomplete="email" maxlength="120" required></div>
+            </div>
+            <fieldset><legend>Motivo del contatto</legend><div class="pills">
+              <label><input type="radio" name="cReason" value="Lettura del tema natale">Lettura del tema natale</label>
+              <label><input type="radio" name="cReason" value="Domande e curiosità">Domande e curiosità</label>
+              <label><input type="radio" name="cReason" value="Altro">Altro</label></div></fieldset>
+            <fieldset><legend>Come preferisci</legend><div class="pills">
+              <label><input type="radio" name="cMode" value="Online">Online</label>
+              <label><input type="radio" name="cMode" value="In presenza">In presenza</label></div></fieldset>
+            <div class="field"><label for="cMsg">Presentati e scrivimi</label>
+              <textarea id="cMsg" rows="7" maxlength="3000" placeholder="Chi sei, cosa ti porta qui, cosa vorresti sapere…" style="font:inherit;font-size:1rem;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);resize:vertical"></textarea>
+              <div class="counter" id="cCount" aria-live="polite">0 / 3000</div></div>
+            <div class="hp" aria-hidden="true"><label for="cHp">Lascia vuoto</label><input id="cHp" tabindex="-1" autocomplete="off"></div>
+            <label class="check" style="margin:0 0 16px"><input type="checkbox" id="cPrivacy"> <span>Acconsento al trattamento dei dati per ricevere una risposta, come descritto nell’<a href="/privacy" target="_blank">informativa privacy</a>.</span></label>
+            <p class="err" id="cErr" role="alert"></p>
+            <button class="btn" type="submit" style="width:100%;justify-content:center">Invia il messaggio</button>
+            <p class="hint" id="cHint" style="margin-top:10px;text-align:center">Il messaggio parte dalla tua app di posta, già compilato.</p>
+          </form>
+          <div class="done" id="contactDone" hidden aria-live="polite">
+            
+            <h3>Grazie!</h3>
+            <p id="doneMail">Si è aperta la tua app di posta con il messaggio pronto: premi Invia e ti risponderò entro qualche giorno.</p>
+            <p id="doneMail2">Non si è aperta? Copia il messaggio e invialo a <a href="mailto:lapostadimara@gmail.com">lapostadimara@gmail.com</a>.</p>
+            <p id="doneSent" hidden>Il tuo messaggio è arrivato. Ti risponderò all’indirizzo che hai indicato entro qualche giorno.</p>
+            <div class="row"><button type="button" class="mini" id="cCopy">Copia il messaggio</button><button type="button" class="mini" id="cAgain">Scrivi un altro messaggio</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL -->
+  <section class="block" id="social" aria-labelledby="socialT">
+    <div class="wrap">
+      <div class="reveal">
+        <h2 id="socialT">Dove <em>trovarmi</em></h2>
+        <p class="lede">Le rubriche escono soprattutto su Instagram e TikTok. Per tutto il resto c’è Linktree.</p>
+      </div>
+      <ul class="big-links reveal">
+        <li><a data-social="instagram" href="https://www.instagram.com/astroquack/" target="_blank" rel="noopener"><span class="n">Instagram</span><span class="h"><span data-handle="instagram">@astroquack</span> · reel, caroselli, storie</span></a></li>
+        <li><a data-social="tiktok" href="https://www.tiktok.com/@astroquack" target="_blank" rel="noopener"><span class="n">TikTok</span><span class="h"><span data-handle="tiktok">@astroquack</span> · Paper-News, Paperelle in Love</span></a></li>
+        <li><a data-social="linktree" href="https://linktr.ee/astroquack" target="_blank" rel="noopener"><span class="n">Linktree</span><span class="h">tutti i link in un posto</span></a></li>
+        <li><a data-social="spotify" href="https://open.spotify.com/" target="_blank" rel="noopener"><span class="n">Spotify</span><span class="h">SuperQuack e le playlist del mese</span></a></li>
+        <li><a href="mailto:lapostadimara@gmail.com"><span class="n">La posta</span><span class="h">lapostadimara@gmail.com</span></a></li>
+      </ul>
+      <div class="reveal" style="margin-top:80px">
+        <h3>La settimana di AstroQuack</h3>
+        <div class="week-wrap"><div class="week">
+          <div><b>Lunedì</b><span>Monday Quack</span><span>Paper-News</span></div>
+          <div><b>Martedì</b></div>
+          <div><b>Mercoledì</b><span>SuperQuack</span><span>Reminder eventi</span></div>
+          <div><b>Giovedì</b></div>
+          <div><b>Venerdì</b><span>La posta di Mara</span></div>
+          <div><b>Sabato</b><span>ASR Papere</span></div>
+          <div><b>Domenica</b><span>ASR Papere</span></div>
+        </div></div>
+        <p class="hint" style="margin-top:12px">Paperelle in Love esce con i transiti di Luna e Venere; Born in the Quack e Paper-News del mese a inizio mese.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENTI -->
+  <section class="block night" id="eventi" aria-labelledby="eventiT">
+    <div class="wrap">
+      <div class="reveal">
+        <h2 id="eventiT"><em>Eventi</em></h2>
+        <p class="lede">Workshop, dirette e incontri dal vivo: quelli in arrivo e quelli già passati, con foto e video.</p>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Filtra eventi">
+        <button role="tab" id="tabNext" aria-selected="true" type="button">Prossimi</button>
+        <button role="tab" id="tabPast" aria-selected="false" type="button">Passati</button>
+      </div>
+      <ol class="timeline" id="timeline"></ol>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="block night newsletter" id="newsletter" aria-labelledby="nlT" hidden>
+    <div class="wrap">
+      <div class="nl reveal">
+        <div>
+          <h2 id="nlT">Le lune nella tua <em>casella</em></h2>
+          <p class="lede">Una email per ogni Luna nuova e piena, con gli articoli e gli eventi del mese. Niente spam, ti disiscrivi con un clic.</p>
+        </div>
+        <form id="nlForm" class="nl-form" novalidate>
+          <div class="field"><label for="nlEmail">La tua email</label><input id="nlEmail" type="email" autocomplete="email" inputmode="email" required></div>
+          <label class="check"><input type="checkbox" id="nlOk"> <span>Voglio ricevere la newsletter e ho letto l’<a href="/privacy" target="_blank">informativa privacy</a>.</span></label>
+          <p class="err" id="nlErr" role="alert"></p>
+          <button class="btn" type="submit">Iscriviti</button>
+          <p class="nl-done" id="nlDone" hidden aria-live="polite">Grazie! Controlla la tua casella: potrebbe arrivarti un’email per confermare l’iscrizione.</p>
+        </form>
+        <iframe name="nlFrame" id="nlFrame" title="Invio iscrizione" hidden></iframe>
+      </div>
+    </div>
+  </section>
+
+  <footer class="night">
+    <div class="wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="122 132 362 296" class="logo" role="img" aria-label="Logo AstroQuack">
+<path fill="#FADBEB" d="M 395.19 311.27 C 395.19 353.83 360.69 388.33 318.12 388.33 C 275.57 388.33 241.06 353.83 241.06 311.27 C 241.06 268.71 275.57 234.21 318.12 234.21 C 360.69 234.21 395.19 268.71 395.19 311.27 "/>
+<path fill="#E3619F" d="M 223.39 203.59 L 175.82 164.04 L 133.61 164.04 L 151.21 178.77 L 204.32 223.21 C 210.64 215.17 214.06 211.24 223.39 203.59 "/>
+<path fill="#E3619F" d="M 311.39 276.76 L 223.39 203.59 C 220.50 206.64 210.96 211.24 204.32 223.21 L 297.98 301.59 L 450.43 172.98 L 450.43 164.04 Z M 311.39 276.76 "/>
+<path fill="#E3619F" d="M 130.63 416.80 C 130.63 416.80 150.99 414.31 150.99 381.04 L 150.99 178.77 L 163.69 189.21 L 163.69 381.04 C 163.69 381.04 161.92 408.35 181.28 419.28 Z M 130.63 416.80 "/>
+<path fill="#E3619F" d="M 411.59 248.73 C 411.51 248.64 411.49 248.54 411.44 248.45 L 297.98 335.61 L 297.98 350.17 L 415.37 260.50 C 414.01 256.67 414.33 251.93 411.59 248.73 "/>
+<path fill="#E3619F" d="M 450.43 394.94 C 449.44 378.56 450.43 215.68 450.43 215.68 L 409.52 249.93 C 412.14 255.05 413.49 257.95 414.49 261.18 L 432.05 244.98 L 432.05 395.44 C 432.05 395.44 434.54 407.36 407.72 416.80 L 474.76 416.80 C 474.76 416.80 451.42 411.33 450.43 394.94 "/>
+<path fill="#F4ACCD" d="M 334.00 386.97 C 299.38 385.33 267.48 365.48 253.08 332.73 C 245.5 315.49 243.84 297.10 247.18 279.66 C 239.17 298.78 238.70 321.02 247.71 341.50 C 262.69 375.55 298.95 393.61 334.00 386.97 "/>
+<path fill="#FADBEB" d="M 322.35 157.42 C 322.26 156.08 321.80 154.93 320.64 154.15 C 316.84 152.16 316.36 158.55 319.25 159.80 C 320.92 160.74 322.44 159.10 322.35 157.42 M 308.31 200.09 C 314.56 200.29 321.42 197.86 321.78 190.63 C 321.72 185.23 319.11 179.62 312.80 180.88 C 305.42 181.67 298.28 188.68 290.75 185.14 C 290.63 185.03 290.44 185.12 290.53 185.30 C 291.32 188.66 293.96 191.06 296.65 193.00 C 297.57 193.76 292.35 192.46 291.99 192.41 C 291.26 192.21 291.29 192.75 291.54 193.28 C 291.93 194.29 292.82 194.87 293.56 195.57 C 297.47 199.37 303.07 199.94 308.31 200.09 M 325.84 169.75 C 323.40 171.38 324.26 174.06 326.02 175.87 C 329.89 180.64 335.11 186.94 332.57 193.43 C 328.00 205.65 313.51 206.04 302.39 206.07 C 296.10 205.71 289.13 205.58 284.03 201.39 C 277.47 196.48 274.07 191.24 272.33 183.22 C 271.53 179.87 270.87 176.44 270.81 172.98 C 270.85 170.30 274.01 170.79 275.06 172.57 C 277.84 176.33 282.33 179.76 287.25 178.52 C 290.54 177.66 293.52 175.94 296.88 175.28 C 299.21 174.73 301.57 174.50 303.95 174.41 C 304.80 174.48 307.80 174.61 306.48 173.10 C 300.26 171.70 297.00 165.39 297.79 159.32 C 297.98 157.51 298.35 155.74 298.90 154.01 C 299.00 153.67 298.79 153.73 298.60 153.75 C 297.44 153.82 296.08 153.39 295.53 152.33 C 296.17 152.19 296.96 152.44 297.66 152.41 C 296.16 151.67 294.80 149.87 295.21 148.19 C 296.72 149.10 298.33 150.10 300.19 150.33 C 301.20 150.54 301.92 149.69 302.52 149.01 C 303.85 147.52 305.50 146.47 307.30 145.65 C 314.46 142.18 323.79 145.26 327.39 152.37 C 328.35 154.10 328.59 156.10 329.53 157.83 C 328.48 159.14 328.90 160.92 328.06 162.30 C 326.66 164.44 322.86 167.30 325.84 169.75 "/>
+<path fill="#EA5F9E" d="M 325.84 169.75 C 322.86 167.29 326.66 164.45 328.06 162.30 C 328.90 160.92 328.48 159.14 329.53 157.83 C 330.37 159.02 331.56 160.01 333.08 159.86 C 335.07 159.76 337.04 159.53 338.97 159.00 C 340.57 159.01 339.52 161.56 339.20 162.41 C 338.32 164.41 336.81 165.77 334.78 166.57 C 336.17 166.74 337.14 167.35 337.57 168.68 C 333.62 168.38 329.54 168.30 325.84 169.75 "/>
+<path fill="#F4ACCD" d="M 308.31 200.09 C 303.07 199.94 297.47 199.37 293.56 195.57 C 292.82 194.87 291.93 194.29 291.54 193.28 C 291.30 192.75 291.25 192.21 291.99 192.41 C 292.25 192.45 297.62 193.76 296.65 193.00 C 293.96 191.06 291.31 188.66 290.53 185.29 C 290.46 185.13 290.61 185.03 290.75 185.14 C 299.06 188.96 306.67 180.37 315.01 180.75 C 319.95 180.87 321.76 186.48 321.78 190.63 C 321.42 197.86 314.57 200.28 308.31 200.09 "/>
+<path fill="#EA5F9E" d="M 321.58 156.69 C 321.65 155.73 320.20 155.20 320.13 156.36 C 320.06 157.31 321.53 157.86 321.58 156.69 M 322.35 157.42 C 322.44 159.10 320.92 160.74 319.25 159.80 C 316.36 158.55 316.84 152.16 320.64 154.15 C 321.80 154.93 322.26 156.08 322.35 157.42 "/>
+<path fill="#FEF9FC" d="M 321.58 156.69 C 321.53 157.85 320.06 157.31 320.13 156.36 C 320.20 155.20 321.65 155.73 321.58 156.69 "/>
+<path fill="#F4ACCD" d="M 345.66 398.44 C 295.19 411.42 244.01 382.07 231.36 332.88 C 218.71 283.69 249.37 233.30 299.84 220.32 C 312.93 216.95 326.07 216.44 338.58 218.37 C 318.86 211.10 296.66 209.55 274.57 215.24 C 217.94 229.80 183.55 286.35 197.74 341.53 C 211.93 396.71 269.35 429.65 325.97 415.08 C 348.06 409.40 366.76 397.33 380.52 381.45 C 370.50 389.18 358.75 395.07 345.66 398.44 "/>
+</svg><span>© AstroQuack · Calcoli astronomici: Swiss Ephemeris 2.10 © Astrodienst AG · <a id="srcLink" href="https://github.com/" target="_blank" rel="noopener">Codice sorgente</a> con licenza AGPL-3.0 · <a href="/privacy">Privacy</a></span><button class="theme-btn mobile-theme" id="themeBtn2" type="button" style="color:var(--ink-soft)">Pagine scure</button></div>
+  </footer>
+</div>
+
+<dialog id="menuDlg" class="sheet" aria-label="Menu">
+  <div class="sheet-head"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="122 132 362 296" class="logo" role="img" aria-label="Logo AstroQuack">
+<path fill="#FADBEB" d="M 395.19 311.27 C 395.19 353.83 360.69 388.33 318.12 388.33 C 275.57 388.33 241.06 353.83 241.06 311.27 C 241.06 268.71 275.57 234.21 318.12 234.21 C 360.69 234.21 395.19 268.71 395.19 311.27 "/>
+<path fill="#E3619F" d="M 223.39 203.59 L 175.82 164.04 L 133.61 164.04 L 151.21 178.77 L 204.32 223.21 C 210.64 215.17 214.06 211.24 223.39 203.59 "/>
+<path fill="#E3619F" d="M 311.39 276.76 L 223.39 203.59 C 220.50 206.64 210.96 211.24 204.32 223.21 L 297.98 301.59 L 450.43 172.98 L 450.43 164.04 Z M 311.39 276.76 "/>
+<path fill="#E3619F" d="M 130.63 416.80 C 130.63 416.80 150.99 414.31 150.99 381.04 L 150.99 178.77 L 163.69 189.21 L 163.69 381.04 C 163.69 381.04 161.92 408.35 181.28 419.28 Z M 130.63 416.80 "/>
+<path fill="#E3619F" d="M 411.59 248.73 C 411.51 248.64 411.49 248.54 411.44 248.45 L 297.98 335.61 L 297.98 350.17 L 415.37 260.50 C 414.01 256.67 414.33 251.93 411.59 248.73 "/>
+<path fill="#E3619F" d="M 450.43 394.94 C 449.44 378.56 450.43 215.68 450.43 215.68 L 409.52 249.93 C 412.14 255.05 413.49 257.95 414.49 261.18 L 432.05 244.98 L 432.05 395.44 C 432.05 395.44 434.54 407.36 407.72 416.80 L 474.76 416.80 C 474.76 416.80 451.42 411.33 450.43 394.94 "/>
+<path fill="#F4ACCD" d="M 334.00 386.97 C 299.38 385.33 267.48 365.48 253.08 332.73 C 245.5 315.49 243.84 297.10 247.18 279.66 C 239.17 298.78 238.70 321.02 247.71 341.50 C 262.69 375.55 298.95 393.61 334.00 386.97 "/>
+<path fill="#FADBEB" d="M 322.35 157.42 C 322.26 156.08 321.80 154.93 320.64 154.15 C 316.84 152.16 316.36 158.55 319.25 159.80 C 320.92 160.74 322.44 159.10 322.35 157.42 M 308.31 200.09 C 314.56 200.29 321.42 197.86 321.78 190.63 C 321.72 185.23 319.11 179.62 312.80 180.88 C 305.42 181.67 298.28 188.68 290.75 185.14 C 290.63 185.03 290.44 185.12 290.53 185.30 C 291.32 188.66 293.96 191.06 296.65 193.00 C 297.57 193.76 292.35 192.46 291.99 192.41 C 291.26 192.21 291.29 192.75 291.54 193.28 C 291.93 194.29 292.82 194.87 293.56 195.57 C 297.47 199.37 303.07 199.94 308.31 200.09 M 325.84 169.75 C 323.40 171.38 324.26 174.06 326.02 175.87 C 329.89 180.64 335.11 186.94 332.57 193.43 C 328.00 205.65 313.51 206.04 302.39 206.07 C 296.10 205.71 289.13 205.58 284.03 201.39 C 277.47 196.48 274.07 191.24 272.33 183.22 C 271.53 179.87 270.87 176.44 270.81 172.98 C 270.85 170.30 274.01 170.79 275.06 172.57 C 277.84 176.33 282.33 179.76 287.25 178.52 C 290.54 177.66 293.52 175.94 296.88 175.28 C 299.21 174.73 301.57 174.50 303.95 174.41 C 304.80 174.48 307.80 174.61 306.48 173.10 C 300.26 171.70 297.00 165.39 297.79 159.32 C 297.98 157.51 298.35 155.74 298.90 154.01 C 299.00 153.67 298.79 153.73 298.60 153.75 C 297.44 153.82 296.08 153.39 295.53 152.33 C 296.17 152.19 296.96 152.44 297.66 152.41 C 296.16 151.67 294.80 149.87 295.21 148.19 C 296.72 149.10 298.33 150.10 300.19 150.33 C 301.20 150.54 301.92 149.69 302.52 149.01 C 303.85 147.52 305.50 146.47 307.30 145.65 C 314.46 142.18 323.79 145.26 327.39 152.37 C 328.35 154.10 328.59 156.10 329.53 157.83 C 328.48 159.14 328.90 160.92 328.06 162.30 C 326.66 164.44 322.86 167.30 325.84 169.75 "/>
+<path fill="#EA5F9E" d="M 325.84 169.75 C 322.86 167.29 326.66 164.45 328.06 162.30 C 328.90 160.92 328.48 159.14 329.53 157.83 C 330.37 159.02 331.56 160.01 333.08 159.86 C 335.07 159.76 337.04 159.53 338.97 159.00 C 340.57 159.01 339.52 161.56 339.20 162.41 C 338.32 164.41 336.81 165.77 334.78 166.57 C 336.17 166.74 337.14 167.35 337.57 168.68 C 333.62 168.38 329.54 168.30 325.84 169.75 "/>
+<path fill="#F4ACCD" d="M 308.31 200.09 C 303.07 199.94 297.47 199.37 293.56 195.57 C 292.82 194.87 291.93 194.29 291.54 193.28 C 291.30 192.75 291.25 192.21 291.99 192.41 C 292.25 192.45 297.62 193.76 296.65 193.00 C 293.96 191.06 291.31 188.66 290.53 185.29 C 290.46 185.13 290.61 185.03 290.75 185.14 C 299.06 188.96 306.67 180.37 315.01 180.75 C 319.95 180.87 321.76 186.48 321.78 190.63 C 321.42 197.86 314.57 200.28 308.31 200.09 "/>
+<path fill="#EA5F9E" d="M 321.58 156.69 C 321.65 155.73 320.20 155.20 320.13 156.36 C 320.06 157.31 321.53 157.86 321.58 156.69 M 322.35 157.42 C 322.44 159.10 320.92 160.74 319.25 159.80 C 316.36 158.55 316.84 152.16 320.64 154.15 C 321.80 154.93 322.26 156.08 322.35 157.42 "/>
+<path fill="#FEF9FC" d="M 321.58 156.69 C 321.53 157.85 320.06 157.31 320.13 156.36 C 320.20 155.20 321.65 155.73 321.58 156.69 "/>
+<path fill="#F4ACCD" d="M 345.66 398.44 C 295.19 411.42 244.01 382.07 231.36 332.88 C 218.71 283.69 249.37 233.30 299.84 220.32 C 312.93 216.95 326.07 216.44 338.58 218.37 C 318.86 211.10 296.66 209.55 274.57 215.24 C 217.94 229.80 183.55 286.35 197.74 341.53 C 211.93 396.71 269.35 429.65 325.97 415.08 C 348.06 409.40 366.76 397.33 380.52 381.45 C 370.50 389.18 358.75 395.07 345.66 398.44 "/>
+</svg></span><b>AstroQuack</b><button type="button" class="sheet-x" id="menuClose" aria-label="Chiudi il menu">×</button></div>
+  <nav class="sheet-nav" aria-label="Tutte le sezioni">
+    <a href="#cielo"><span class="g" aria-hidden="true">☉&#xFE0E;</span>Il cielo, giorno per giorno</a>
+    <a href="#calendario"><span class="g" aria-hidden="true">♂&#xFE0E;</span>Calendario dei transiti</a>
+    <a href="#lune"><span class="g" aria-hidden="true">☾&#xFE0E;</span>Le lune del mese</a>
+    <a href="#chi-sono"><span class="g" aria-hidden="true">♀&#xFE0E;</span>Chi sono</a>
+    <a href="#tema"><span class="g" aria-hidden="true">♃&#xFE0E;</span>Tema natale e transiti</a>
+    <a href="#sinastria"><span class="g" aria-hidden="true">♀&#xFE0E;</span>Sinastria</a>
+    <a href="/blog"><span class="g" aria-hidden="true">☿&#xFE0E;</span>Blog</a>
+    <a href="#social"><span class="g" aria-hidden="true">♅&#xFE0E;</span>Social</a>
+    <a href="#eventi"><span class="g" aria-hidden="true">☽&#xFE0E;</span>Eventi</a>
+  </nav>
+  <a class="btn sheet-cta" href="#contattami">Scrivimi</a>
+  <button type="button" class="theme-btn sheet-theme" id="themeBtn3">Pagine scure</button>
+</dialog>
+<dialog id="postDlg" aria-label="Articolo"><button type="button" class="dlg-close" id="postClose" aria-label="Chiudi">×</button><div id="postBody"></div></dialog>
+<dialog id="editDlg" aria-label="Editor articolo">
+  <button type="button" class="dlg-close" id="eClose" aria-label="Chiudi">×</button>
+  <div class="editor">
+    <h3>Articolo</h3>
+    <div class="field"><label for="eTitle">Titolo</label><input id="eTitle" maxlength="120"></div>
+    <div class="row2"><div class="field"><label for="eRub">Rubrica</label><select id="eRub"></select></div>
+      <div class="field"><label for="eDate">Data di pubblicazione</label><input id="eDate" type="datetime-local"></div></div>
+    <div class="field"><label for="eEx">Estratto</label><input id="eEx" maxlength="200" placeholder="Due righe che invogliano a leggere"></div>
+    <div class="field"><span class="lbl" style="font-weight:600;font-size:.9rem">Segni citati</span><div class="sg-wrap" id="eSigns"></div></div>
+    <div class="field"><label for="eBody">Testo</label>
+      <div class="toolbar"><button type="button" class="mini" data-md="b"><b>G</b></button><button type="button" class="mini" data-md="i"><i>C</i></button><button type="button" class="mini" data-md="h">Titolo</button><button type="button" class="mini" data-md="l">Elenco</button><button type="button" class="mini" data-md="q">Citazione</button><button type="button" class="mini" data-md="a">Link</button><button type="button" class="mini" id="eTogglePrev">Anteprima</button></div>
+      <textarea id="eBody" placeholder="Scrivi qui. ## per un titolo, **grassetto**, *corsivo*, - per gli elenchi, > per una citazione."></textarea>
+      <div class="prev prose" id="ePreview" hidden></div></div>
+    <div class="ev-panel"><h4>Il cielo del periodo</h4><p class="hint">Ingressi, retrogradazioni e lunazioni calcolati con Swiss Ephemeris, a partire dalla data dell’articolo.</p>
+      <div class="row"><select id="evSpan" aria-label="Periodo"><option value="7">7 giorni</option><option value="14">14 giorni</option><option value="31">un mese</option></select>
+        <label class="check" style="margin:0"><input type="checkbox" id="evMoon"> Includi i cambi di segno della Luna</label>
+        <button type="button" class="mini pri" id="evCalc">Calcola</button></div>
+      <ul class="ev-list" id="evList"></ul></div>
+    <div class="row2"><div class="field"><label for="eStatus">Stato</label><select id="eStatus"><option value="bozza">Bozza</option><option value="pubblicato">Pubblicato (o programmato)</option></select></div></div>
+    <div class="save-row"><button type="button" class="btn" id="eSave">Salva</button><button type="button" class="mini" id="eDelete" hidden>Elimina</button><span class="saved" id="eMsg" aria-live="polite"></span></div>
+  </div>
+</dialog>
+<script src="content/config.js"></script>
+<script src="content/events.js"></script>
+<script src="content/posts.js"></script>
+<script src="assets/js/cities.js"></script>
+<script src="assets/js/atlas.js"></script>
+<script src="assets/js/engine.js"></script>
+<script src="assets/js/main.js"></script>
+<script type="module" src="assets/js/boot.mjs"></script>
+</body>
+</html>
