@@ -1,0 +1,107 @@
+# Configurazione del pannello AstroQuack (Decap CMS)
+# Il backend (repository GitHub e accesso) è impostato in admin/index.html.
+locale: it
+media_folder: assets/img/uploads
+public_folder: /assets/img/uploads
+publish_mode: simple
+site_url: /
+display_url: /
+logo_url: /assets/icons/icon-192.png
+
+collections:
+  - name: articoli
+    label: Articoli del blog
+    label_singular: Articolo
+    folder: content/posts
+    format: json
+    extension: json
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} · {{rubrica}} · {{date | date('DD/MM/YYYY')}} · {{status}}"
+    sortable_fields: [date, title]
+    view_filters:
+      - { label: Bozze, field: status, pattern: bozza }
+      - { label: Pubblicati, field: status, pattern: pubblicato }
+    fields:
+      - { label: Titolo, name: title, widget: string }
+      - label: Rubrica
+        name: rubrica
+        widget: select
+        options:
+          - { label: Paper-News, value: paper-news }
+          - { label: Paperelle in Love, value: paperelle-in-love }
+          - { label: Born in the Quack, value: born-in-the-quack }
+          - { label: SuperQuack, value: superquack }
+          - { label: Monday Quack, value: monday-quack }
+          - { label: La posta di Mara, value: la-posta-di-mara }
+          - { label: ASR Papere, value: asr-papere }
+      - { label: Data di pubblicazione, name: date, widget: datetime, hint: "Con una data futura l’articolo compare da quel giorno." }
+      - { label: Stato, name: status, widget: select, options: [pubblicato, bozza], default: bozza }
+      - label: Segni citati
+        name: signs
+        widget: select
+        multiple: true
+        required: false
+        options: [Ariete, Toro, Gemelli, Cancro, Leone, Vergine, Bilancia, Scorpione, Sagittario, Capricorno, Acquario, Pesci]
+      - { label: Estratto, name: excerpt, widget: text, required: false, hint: "Due righe che invogliano a leggere. Compare nelle anteprime e su Google (massimo 200 caratteri)." }
+      - { label: Testo, name: body, widget: markdown, buttons: [bold, italic, link, heading-two, heading-three, quote, bulleted-list, numbered-list], editor_components: [image] }
+
+  - name: eventi
+    label: Eventi
+    files:
+      - name: elenco
+        label: Elenco degli eventi
+        file: content/events.json
+        fields:
+          - label: Eventi
+            name: events
+            widget: list
+            label_singular: evento
+            summary: "{{fields.date}} · {{fields.title}}"
+            fields:
+              - { label: Data, name: date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+              - { label: Ora, name: time, widget: string, required: false, hint: "Per esempio 18:30" }
+              - { label: Titolo, name: title, widget: string }
+              - { label: Luogo, name: where, widget: string, required: false }
+              - { label: Descrizione, name: text, widget: text, required: false }
+              - { label: Link (iscrizione o biglietti), name: link, widget: string, required: false }
+              - { label: Immagine principale, name: image, widget: image, required: false }
+              - label: Foto e video
+                name: media
+                widget: list
+                required: false
+                summary: "{{fields.type}} · {{fields.label}}"
+                fields:
+                  - { label: Tipo, name: type, widget: select, options: [foto, video], default: foto }
+                  - { label: Didascalia, name: label, widget: string }
+                  - { label: Immagine, name: src, widget: image, required: false }
+
+  - name: impostazioni
+    label: Impostazioni
+    files:
+      - name: sito
+        label: Impostazioni del sito
+        file: content/settings.json
+        fields:
+          - { label: Indirizzo del sito, name: url, widget: string, hint: "Senza barra finale, es. https://www.astroquack.it" }
+          - { label: Email che riceve i messaggi, name: email, widget: string }
+          - { label: Titolare del sito (per l’informativa privacy), name: titolare, widget: string, required: false, hint: "Nome e cognome, ed eventuale partita IVA" }
+          - { label: Email per la privacy, name: titolareContatto, widget: string, required: false }
+          - { label: Link al codice sorgente, name: repo, widget: string }
+          - { label: Codice di verifica Google Search Console, name: googleVerification, widget: string, required: false, hint: "Solo il valore di content=\"…\"" }
+          - { label: Chiave Web3Forms (invio diretto dei messaggi), name: web3formsKey, widget: string, required: false }
+          - { label: Indirizzo del modulo newsletter, name: newsletterAction, widget: string, required: false, hint: "L’indirizzo «action» del modulo fornito dal servizio di newsletter" }
+          - { label: Nome del campo email della newsletter, name: newsletterEmailField, widget: string, required: false, default: email }
+          - { label: Campi nascosti aggiuntivi della newsletter, name: newsletterExtraFields, widget: string, required: false, hint: "Nel formato nome=valore&nome2=valore2, se il servizio li richiede" }
+          - { label: Statistiche di Vercel attive, name: analytics, widget: boolean, default: true }
+          - label: Social
+            name: social
+            widget: object
+            fields:
+              - { label: Instagram (link), name: instagram, widget: string }
+              - { label: Instagram (nome utente), name: instagramHandle, widget: string }
+              - { label: TikTok (link), name: tiktok, widget: string }
+              - { label: TikTok (nome utente), name: tiktokHandle, widget: string }
+              - { label: Linktree (link), name: linktree, widget: string }
+              - { label: Spotify (link), name: spotify, widget: string }
