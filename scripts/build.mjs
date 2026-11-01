@@ -14,12 +14,13 @@ const SKIP = new Set(['dist', 'scripts', 'node_modules', '.git', '.vercel', '.gi
 const readJSON = f => JSON.parse(fs.readFileSync(path.join(ROOT, f), 'utf8'));
 const SITE = readJSON('content/settings.json');
 const SIGN_NAMES = ['Ariete', 'Toro', 'Gemelli', 'Cancro', 'Leone', 'Vergine', 'Bilancia', 'Scorpione', 'Sagittario', 'Capricorno', 'Acquario', 'Pesci'];
-const POSTS = fs.readdirSync(path.join(ROOT, 'content/posts')).filter(f => f.endsWith('.json')).map(f => {
+const POSTS_DIR = path.join(ROOT, 'content/posts');
+const POSTS = (fs.existsSync(POSTS_DIR) ? fs.readdirSync(POSTS_DIR) : []).filter(f => f.endsWith('.json')).map(f => {
   const p = readJSON('content/posts/' + f);
   return { ...p, slug: f.replace(/\.json$/, ''), date: new Date(p.date || Date.now()).toISOString(),
     signs: (p.signs || []).map(x => typeof x === 'number' ? x : SIGN_NAMES.indexOf(x)).filter(i => i >= 0) };
 });
-const EVENTS = (readJSON('content/events.json').events || []).map(e => ({ ...e, date: String(e.date || '').slice(0, 10) }));
+const EVENTS = ((fs.existsSync(path.join(ROOT, 'content/events.json')) ? readJSON('content/events.json') : {}).events || []).map(e => ({ ...e, date: String(e.date || '').slice(0, 10) }));
 const BASE = String(SITE.url || '').replace(/\/+$/, '');
 const mainJs = fs.readFileSync(path.join(ROOT, 'assets/js/main.js'), 'utf8');
 const RUBRICHE = vm.runInNewContext('(' + mainJs.match(/const RUBRICHE=(\[[\s\S]*?\]);/)[1] + ')');
