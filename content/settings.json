@@ -1,15 +1,5 @@
 {
-  "url": "https://www.astroquack.it",
-  "email": "lapostadelcuoredimara@gmail.com",
-  "repo": "https://github.com/martamartellib612-dev/astro_quack",
-  "googleVerification": "",
-  "web3formsKey": "510a4a35-6631-49b2-a6e3-48084cb1b9f0",
-  "newsletterAction": "",
-  "newsletterEmailField": "email",
-  "newsletterExtraFields": "",
   "analytics": true,
-  "titolare": "",
-  "titolareContatto": "lapostadelcuoredimara@gmail.com",
   "social": {
     "instagram": "https://www.instagram.com/astroquack/",
     "instagramHandle": "@astroquack",
@@ -17,5 +7,15 @@
     "tiktokHandle": "@astroquack",
     "linktree": "https://linktr.ee/astroquack",
     "spotify": "https://open.spotify.com/"
-  }
+  },
+  "web3formsKey": "448646e2-2737-4a9e-a098-801e735c8560",
+  "newsletterAction": "",
+  "url": "https://www.astroquack.it",
+  "newsletterExtraFields": "",
+  "repo": "https://github.com/martamartellib612-dev/astro_quack",
+  "googleVerification": "",
+  "newsletterEmailField": "email",
+  "titolare": "",
+  "titolareContatto": "lapostadelcuoredimara@gmail.com",
+  "email": "lapostadelcuoredimara@gmail.com"
 }
