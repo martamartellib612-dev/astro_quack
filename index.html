@@ -14,7 +14,7 @@
 </head>
 <body>
 <aside class="rail" aria-label="Navigazione">
-  <a class="brand" href="#home" aria-label="AstroQuack, torna all’inizio"><svg xmlns="http://www.w3.org/2000/svg" viewBox="122 132 362 296" class="logo" role="img" aria-label="Logo AstroQuack">
+  <a class="brand" href="/" aria-label="AstroQuack, torna all’inizio"><svg xmlns="http://www.w3.org/2000/svg" viewBox="122 132 362 296" class="logo" role="img" aria-label="Logo AstroQuack">
 <path fill="#FADBEB" d="M 395.19 311.27 C 395.19 353.83 360.69 388.33 318.12 388.33 C 275.57 388.33 241.06 353.83 241.06 311.27 C 241.06 268.71 275.57 234.21 318.12 234.21 C 360.69 234.21 395.19 268.71 395.19 311.27 "/>
 <path fill="#E3619F" d="M 223.39 203.59 L 175.82 164.04 L 133.61 164.04 L 151.21 178.77 L 204.32 223.21 C 210.64 215.17 214.06 211.24 223.39 203.59 "/>
 <path fill="#E3619F" d="M 311.39 276.76 L 223.39 203.59 C 220.50 206.64 210.96 211.24 204.32 223.21 L 297.98 301.59 L 450.43 172.98 L 450.43 164.04 Z M 311.39 276.76 "/>
@@ -30,16 +30,16 @@
 <path fill="#F4ACCD" d="M 345.66 398.44 C 295.19 411.42 244.01 382.07 231.36 332.88 C 218.71 283.69 249.37 233.30 299.84 220.32 C 312.93 216.95 326.07 216.44 338.58 218.37 C 318.86 211.10 296.66 209.55 274.57 215.24 C 217.94 229.80 183.55 286.35 197.74 341.53 C 211.93 396.71 269.35 429.65 325.97 415.08 C 348.06 409.40 366.76 397.33 380.52 381.45 C 370.50 389.18 358.75 395.07 345.66 398.44 "/>
 </svg><span>AstroQuack</span></a>
   <nav class="nav">
-    <a href="#cielo"><span class="g" aria-hidden="true">☉&#xFE0E;</span>Il cielo</a>
-    <a href="#calendario"><span class="g" aria-hidden="true">♂&#xFE0E;</span><span class="lbl-l">Calendario</span><span class="lbl-s">Mese</span></a>
-    <a href="#lune" class="m-hide"><span class="g" aria-hidden="true">☾&#xFE0E;</span>Le lune</a>
-    <a href="#chi-sono" class="m-hide"><span class="g" aria-hidden="true">♀&#xFE0E;</span>Chi sono</a>
-    <a href="#tema"><span class="g" aria-hidden="true">♃&#xFE0E;</span><span class="lbl-l">Tema natale</span><span class="lbl-s">Tema</span></a>
-    <a href="#sinastria" class="m-hide"><span class="g" aria-hidden="true">⚭&#xFE0E;</span>Sinastria</a>
-    <a href="#blog"><span class="g" aria-hidden="true">☿&#xFE0E;</span>Blog</a>
-    <a href="#contattami" class="m-hide"><span class="g" aria-hidden="true">♄&#xFE0E;</span>Contattami</a>
-    <a href="#social" class="m-hide"><span class="g" aria-hidden="true">♅&#xFE0E;</span>Social</a>
-    <a href="#eventi" class="m-hide"><span class="g" aria-hidden="true">☽&#xFE0E;</span>Eventi</a>
+    <a href="/cielo"><span class="g" aria-hidden="true">☉&#xFE0E;</span>Il cielo</a>
+    <a href="/calendario"><span class="g" aria-hidden="true">♂&#xFE0E;</span><span class="lbl-l">Calendario</span><span class="lbl-s">Mese</span></a>
+    <a href="/lune" class="m-hide"><span class="g" aria-hidden="true">☾&#xFE0E;</span>Le lune</a>
+    <a href="/chi-sono" class="m-hide"><span class="g" aria-hidden="true">♀&#xFE0E;</span>Chi sono</a>
+    <a href="/tema"><span class="g" aria-hidden="true">♃&#xFE0E;</span><span class="lbl-l">Tema natale</span><span class="lbl-s">Tema</span></a>
+    <a href="/sinastria" class="m-hide"><span class="g" aria-hidden="true">⚭&#xFE0E;</span>Sinastria</a>
+    <a href="/blog"><span class="g" aria-hidden="true">☿&#xFE0E;</span>Blog</a>
+    <a href="/contattami" class="m-hide"><span class="g" aria-hidden="true">♄&#xFE0E;</span>Contattami</a>
+    <a href="/social" class="m-hide"><span class="g" aria-hidden="true">♅&#xFE0E;</span>Social</a>
+    <a href="/eventi" class="m-hide"><span class="g" aria-hidden="true">☽&#xFE0E;</span>Eventi</a>
     <button type="button" class="nav-more" id="navMore" aria-haspopup="dialog" aria-controls="menuDlg"><span class="g" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span>Menu</button>
   </nav>
   <div class="rail-sky" id="railSky"></div>
@@ -73,16 +73,14 @@
 <path fill="#F4ACCD" d="M 345.66 398.44 C 295.19 411.42 244.01 382.07 231.36 332.88 C 218.71 283.69 249.37 233.30 299.84 220.32 C 312.93 216.95 326.07 216.44 338.58 218.37 C 318.86 211.10 296.66 209.55 274.57 215.24 C 217.94 229.80 183.55 286.35 197.74 341.53 C 211.93 396.71 269.35 429.65 325.97 415.08 C 348.06 409.40 366.76 397.33 380.52 381.45 C 370.50 389.18 358.75 395.07 345.66 398.44 "/>
 </svg></div>
     <div class="hero-copy">
-      <p class="coords" id="heroDate">41°54′ N · 12°29′ E</p>
       <h1><span>Astro</span><span class="i">Quack</span></h1>
-      <p class="hero-sub">Astrologia con le piume. Transiti, miti e paperelle, raccontati ogni settimana senza prendersi troppo sul serio.</p>
+      <p class="hero-sub">Astrologia con le piume. Transiti, miti e paperelle, raccontati in chiave evolutiva ogni settimana. Quack!</p>
       <div class="now" id="heroNow"></div>
       <div class="btns">
-        <a class="btn" href="#tema">Calcola il tuo tema natale</a>
-        <a class="btn ghost" href="#contattami">Scrivimi</a>
+        <a class="btn" href="/tema">Calcola il tuo tema natale</a>
+        <a class="btn ghost" href="/contattami">Scrivimi</a>
       </div>
     </div>
-    <a class="scroll-cue" href="#cielo"><i></i>scorri</a>
   </header>
 
   <!-- CIELO -->
@@ -90,7 +88,7 @@
     <div class="wrap">
       <div class="reveal">
         <h2 id="cieloT">Il cielo, <em>giorno per giorno</em></h2>
-        <p class="lede">Dove si trovano i pianeti, in che segno e a che grado. Scegli un giorno per vedere come cambia la ruota.</p>
+        <p class="lede">Dove si trovano i pianeti, in che segno e a che grado. Scegli un giorno per vedere come si muove la ruota dello zodiaco.</p>
       </div>
       <div class="sky-grid reveal">
         <div class="wheel-wrap" id="skyWheel" role="img" aria-label="Ruota zodiacale con i pianeti del giorno scelto"></div>
@@ -197,14 +195,14 @@
         <p class="lede" style="margin:0;max-width:40ch">Le rubriche su Instagram, TikTok e Spotify, con il loro ritmo d’uscita.</p>
       </div>
       <div class="rubriche reveal">
-        <a class="rub" href="#blog" data-goto-rub="paper-news"><span class="f">settimanale e mensile</span><h3>Paper-News</h3><p>I transiti della settimana e del mese in un reel: chi entra in quale segno e cosa ci aspetta.</p></a>
-        <a class="rub" href="#blog" data-goto-rub="paperelle-in-love"><span class="f">con Luna e Venere</span><h3>Paperelle in Love</h3><p>Venere, la Luna e i transiti che parlano d’amore. Consigli per il cuore, segno per segno.</p></a>
-        <a class="rub" href="#blog" data-goto-rub="born-in-the-quack"><span class="f">mensile</span><h3>Born in the Quack</h3><p>Il segno del mese raccontato con una playlist e un piatto pensato per lui.</p></a>
-        <a class="rub" href="#blog" data-goto-rub="superquack"><span class="f">mensile, il mercoledì</span><h3>SuperQuack</h3><p>Mitologia, storia, politica, figure di donne, femminismi e animali dello zodiaco. Anche in diretta e su Spotify.</p></a>
-        <a class="rub" href="#blog" data-goto-rub="monday-quack"><span class="f">ogni lunedì</span><h3>Monday Quack</h3><p>Il box domande «Lunedì feels, quack», con la playlist per cominciare la settimana.</p></a>
-        <a class="rub" href="#blog" data-goto-rub="la-posta-di-mara"><span class="f">ogni due settimane</span><h3>La posta di Mara</h3><p>Le vostre domande sul cielo, inviate per email, con risposte dedicate.</p></a>
-        <a class="rub" href="#blog" data-goto-rub="asr-papere"><span class="f">ogni settimana</span><h3>ASR Papere</h3><p>L’oroscopo giallorosso: compleanni dei giocatori e pronostici astrali per le partite.</p></a>
-        <a class="rub" href="#contattami"><span class="f">su richiesta</span><h3>Il tuo tema</h3><p>Una lettura del tema natale, personale e senza fretta. Scrivimi per chiederla.</p></a>
+        <a class="rub" href="/blog?rubrica=paper-news"><span class="f">settimanale e mensile</span><h3>Paper-News</h3><p>I transiti della settimana e del mese in un reel: chi entra in quale segno e cosa ci aspetta.</p></a>
+        <a class="rub" href="/blog?rubrica=paperelle-in-love"><span class="f">con Luna e Venere</span><h3>Paperelle in Love</h3><p>Venere, la Luna e i transiti che parlano d’amore. Consigli per il cuore, segno per segno.</p></a>
+        <a class="rub" href="/blog?rubrica=born-in-the-quack"><span class="f">mensile</span><h3>Born in the Quack</h3><p>Il segno del mese raccontato con una playlist e un piatto pensato per lui.</p></a>
+        <a class="rub" href="/blog?rubrica=superquack"><span class="f">mensile, il mercoledì</span><h3>SuperQuack</h3><p>Mitologia, storia, politica, figure di donne, femminismi e animali dello zodiaco. Anche in diretta e su Spotify.</p></a>
+        <a class="rub" href="/blog?rubrica=monday-quack"><span class="f">ogni lunedì</span><h3>Monday Quack</h3><p>Il box domande «Lunedì feels, quack», con la playlist per cominciare la settimana.</p></a>
+        <a class="rub" href="/blog?rubrica=la-posta-di-mara"><span class="f">ogni due settimane</span><h3>La posta di Mara</h3><p>Le vostre domande sul cielo, inviate per email, con risposte dedicate.</p></a>
+        <a class="rub" href="/blog?rubrica=asr-papere"><span class="f">ogni settimana</span><h3>ASR Papere</h3><p>L’oroscopo giallorosso: compleanni dei giocatori e pronostici astrali per le partite.</p></a>
+        <a class="rub" href="/contattami"><span class="f">su richiesta</span><h3>Il tuo tema</h3><p>Una lettura del tema natale, personale e senza fretta. Scrivimi per chiederla.</p></a>
       </div>
     </div>
   </section>
@@ -479,17 +477,18 @@
 <path fill="#F4ACCD" d="M 345.66 398.44 C 295.19 411.42 244.01 382.07 231.36 332.88 C 218.71 283.69 249.37 233.30 299.84 220.32 C 312.93 216.95 326.07 216.44 338.58 218.37 C 318.86 211.10 296.66 209.55 274.57 215.24 C 217.94 229.80 183.55 286.35 197.74 341.53 C 211.93 396.71 269.35 429.65 325.97 415.08 C 348.06 409.40 366.76 397.33 380.52 381.45 C 370.50 389.18 358.75 395.07 345.66 398.44 "/>
 </svg></span><b>AstroQuack</b><button type="button" class="sheet-x" id="menuClose" aria-label="Chiudi il menu">×</button></div>
   <nav class="sheet-nav" aria-label="Tutte le sezioni">
-    <a href="#cielo"><span class="g" aria-hidden="true">☉&#xFE0E;</span>Il cielo, giorno per giorno</a>
-    <a href="#calendario"><span class="g" aria-hidden="true">♂&#xFE0E;</span>Calendario dei transiti</a>
-    <a href="#lune"><span class="g" aria-hidden="true">☾&#xFE0E;</span>Le lune del mese</a>
-    <a href="#chi-sono"><span class="g" aria-hidden="true">♀&#xFE0E;</span>Chi sono</a>
-    <a href="#tema"><span class="g" aria-hidden="true">♃&#xFE0E;</span>Tema natale e transiti</a>
-    <a href="#sinastria"><span class="g" aria-hidden="true">♀&#xFE0E;</span>Sinastria</a>
+    <a href="/"><span class="g" aria-hidden="true">✦&#xFE0E;</span>Home</a>
+    <a href="/cielo"><span class="g" aria-hidden="true">☉&#xFE0E;</span>Il cielo, giorno per giorno</a>
+    <a href="/calendario"><span class="g" aria-hidden="true">♂&#xFE0E;</span>Calendario dei transiti</a>
+    <a href="/lune"><span class="g" aria-hidden="true">☾&#xFE0E;</span>Le lune del mese</a>
+    <a href="/chi-sono"><span class="g" aria-hidden="true">♀&#xFE0E;</span>Chi sono</a>
+    <a href="/tema"><span class="g" aria-hidden="true">♃&#xFE0E;</span>Tema natale e transiti</a>
+    <a href="/sinastria"><span class="g" aria-hidden="true">♀&#xFE0E;</span>Sinastria</a>
     <a href="/blog"><span class="g" aria-hidden="true">☿&#xFE0E;</span>Blog</a>
-    <a href="#social"><span class="g" aria-hidden="true">♅&#xFE0E;</span>Social</a>
-    <a href="#eventi"><span class="g" aria-hidden="true">☽&#xFE0E;</span>Eventi</a>
+    <a href="/social"><span class="g" aria-hidden="true">♅&#xFE0E;</span>Social</a>
+    <a href="/eventi"><span class="g" aria-hidden="true">☽&#xFE0E;</span>Eventi</a>
   </nav>
-  <a class="btn sheet-cta" href="#contattami">Scrivimi</a>
+  <a class="btn sheet-cta" href="/contattami">Scrivimi</a>
   <button type="button" class="theme-btn sheet-theme" id="themeBtn3">Pagine scure</button>
 </dialog>
 <dialog id="postDlg" aria-label="Articolo"><button type="button" class="dlg-close" id="postClose" aria-label="Chiudi">×</button><div id="postBody"></div></dialog>

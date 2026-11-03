@@ -96,7 +96,6 @@ function renderNow(){
   const now=new Date(),pl=AQ.points(now),sun=AQ.fmt(pl[0].lon),moon=AQ.fmt(pl[1].lon),m=AQ.moonInfo(now);
   $('#heroNow').innerHTML=`${moonIcon(m.angle)}<span>Adesso: Sole in ${sun.sign[0]}, Luna in ${moon.sign[0]} · ${moonPhaseName(m.angle).toLowerCase()}</span>`;
   $('#railSky').innerHTML=`${moonIcon(m.angle)}<span><b>${moonPhaseName(m.angle)}</b>Luna in ${moon.sign[0]}</span>`;
-  $('#heroDate').textContent=`41°54′ N · 12°29′ E · ${dateFmt.format(now)}`;
 }
 let skyDay=new Date();
 function renderSky(){
@@ -104,7 +103,7 @@ function renderSky(){
   $('#skyWheel').innerHTML=wheel(pl,null,{logo:1,mini:1,glow:1,id:'s'});
   $('#dayPick').value=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
   const mi=AQ.moonInfo(date);
-  $('#moonLine').innerHTML=`${moonIcon(mi.angle)}<div><b>${cap(dateFmt.format(date))}</b><span>${moonPhaseName(mi.angle)}, illuminata al ${Math.round(mi.ill*100)}% · ore 12:00 a Roma</span></div>`;
+  $('#moonLine').innerHTML=`${moonIcon(mi.angle)}<div><b>${cap(dateFmt.format(date))}</b></div>`;
   $('#skyList').innerHTML=pl.map(p=>{const f=AQ.fmt(p.lon);return `<li><span class="g" aria-hidden="true">${G(p)}</span><span class="nm">${p.name}${p.retro?'<span class="retro" title="Retrogrado">℞</span>':''}</span><span class="ps">${f.text} ${f.sign[0]}</span></li>`}).join('');
 }
 $('#dayPrev').onclick=()=>{skyDay=new Date(skyDay-864e5);renderSky();};
@@ -272,7 +271,7 @@ function renderNatal(o,keepScroll){
       ${(B.admin||OWNER)?`<div><h3 style="margin-bottom:12px">Elenco degli aspetti <span style="font-family:var(--body);font-size:.75rem;font-weight:700;vertical-align:middle;background:#FFE7B8;color:#6B4300;border-radius:999px;padding:3px 10px">Visibile solo a te</span></h3><ul class="aspects">${aspList||'<li>Nessun aspetto.</li>'}</ul></div>`:''}
     </div>
     <div class="transits" id="transits"></div>
-    <div class="res-actions"><button class="btn" type="button" id="shareChart">Condividi la carta</button><button class="btn ghost" type="button" id="printChart">Stampa</button><a class="btn ghost" href="#contattami">Chiedi una lettura</a><button class="btn ghost" type="button" id="newCalc">Nuovo calcolo</button></div>`;
+    <div class="res-actions"><button class="btn" type="button" id="shareChart">Condividi la carta</button><button class="btn ghost" type="button" id="printChart">Stampa</button><a class="btn ghost" href="/contattami">Chiedi una lettura</a><button class="btn ghost" type="button" id="newCalc">Nuovo calcolo</button></div>`;
   $('#newCalc').onclick=()=>{$('#natalForm').reset();updateConv();syncSettings();$('#fTime').disabled=false;lastNatal=null;$('#tema').scrollIntoView();$('#fName').focus({preventScroll:true});};
   NATAL={pl,h,angles,date,name:o.name,dl,place:o.place.name,sun:sun.sign[0],moon:moon.sign[0],asc:asc?asc.sign[0]:null};renderTransits();
   $('#shareChart').onclick=shareChart;$('#printChart').onclick=()=>window.print();
@@ -328,7 +327,7 @@ function openPost(slug){
     <h2 class="post-title">${esc(p.title)}</h2>${p.excerpt?`<p class="lede">${esc(p.excerpt)}</p>`:''}
     <div class="prose">${md(p.body)}</div>
     ${p.signs&&p.signs.length?`<p class="post-signs">${p.signs.map(i=>`<span class="chip-s"><span class="g">${AQ.SIGNS[i][1]+VS}</span>${AQ.SIGNS[i][0]}</span>`).join('')}</p>`:''}
-    <div class="post-cta"><p>Vuoi approfondire il tuo cielo?</p><a class="btn" href="#contattami" data-close>Scrivimi</a></div>
+    <div class="post-cta"><p>Vuoi approfondire il tuo cielo?</p><a class="btn" href="/contattami" data-close>Scrivimi</a></div>
     ${rel.length?`<h3 style="margin:40px 0 14px">Della stessa rubrica</h3><div class="rel">${rel.map(x=>`<button type="button" class="rel-i" data-slug="${esc(x.slug)}"><span>${shortDate.format(new Date(x.date))}</span>${esc(x.title)}</button>`).join('')}</div>`:''}
     ${B.admin?`<div class="res-actions"><button type="button" class="btn ghost" id="editPost">Modifica articolo</button></div>`:''}</div>`;
   $$('#postBody [data-slug]').forEach(b=>b.onclick=()=>openPost(b.dataset.slug));
@@ -552,11 +551,9 @@ $('#lmToday').onclick=()=>{LM.y=0;renderLuneMonth();};
 
 /* ======== navigazione, reveal, tema ======== */
 const links=[...$$('.nav a')];
-const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));}});},{rootMargin:'-45% 0px -50% 0px'});
-['cielo','calendario','lune','chi-sono','tema','sinastria','blog','contattami','social','eventi'].forEach(id=>io.observe(document.getElementById(id)));
+/* la voce attiva del menu segue la scheda aperta (vedi SCHEDE) */
 const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target);}}),{rootMargin:'0px 0px -12% 0px'});
 $$('.reveal').forEach(el=>ro.observe(el));
-$$('[data-goto-rub]').forEach(a=>a.addEventListener('click',()=>{B.filter=a.dataset.gotoRub;B.shown=6;renderBlog();}));
 function isDark(){const t=document.documentElement.dataset.theme;return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;}
 function setTheme(t){if(t!=='light'&&t!=='dark')t=null;if(t)document.documentElement.dataset.theme=t;else delete document.documentElement.dataset.theme;const lbl=isDark()?'Pagine chiare':'Pagine scure';$('#themeBtn').textContent=lbl;$('#themeBtn2').textContent=lbl;if($('#themeBtn3'))$('#themeBtn3').textContent=lbl;}
 const toggle=()=>{const t=isDark()?'light':'dark';store.set('aq-theme',t);setTheme(t);};
@@ -704,7 +701,7 @@ function renderSynastry(A,B){
     <div class="tables"><div><h3 style="margin-bottom:12px">Griglia degli aspetti</h3><p class="hint" style="margin-bottom:8px">Righe: ${esc(A.name)} · colonne: ${esc(B.name)}</p><div class="tbl-wrap">${grid}</div></div>
       <div><h3 style="margin-bottom:12px">Gli aspetti più stretti</h3>${list?`<ul class="tr-list">${list}</ul>`:'<p class="hint">Nessun aspetto maggiore tra i due temi.</p>'}</div>
       <div class="tr-cols">${over(B.pl,A.h,B.name,A.name)}${over(A.pl,B.h,A.name,B.name)}</div></div>
-    <div class="res-actions"><a class="btn" href="#contattami">Chiedi una lettura di coppia</a></div></div>`;
+    <div class="res-actions"><a class="btn" href="/contattami">Chiedi una lettura di coppia</a></div></div>`;
   hoverCross($('#synWheel svg'));
   $('#synOut').scrollIntoView({block:'start'});}
 (function(){const s=store.get('aq-syn');if(!s)return;['sa','sb'].forEach((p,i)=>{const v=s[i]||{};$('#'+p+'Name').value=v.n||'';$('#'+p+'Date').value=v.d||'';$('#'+p+'Time').value=v.t||'12:00';$('#'+p+'NoTime').checked=!!v.x;$('#'+p+'Time').disabled=!!v.x;});})();
@@ -754,3 +751,62 @@ if(SITE.web3formsKey)$('#cHint').textContent='Il messaggio arriva direttamente n
     const add=(k,v)=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=v;f.appendChild(i);};
     add(SITE.newsletterEmailField||'email',em);new URLSearchParams(SITE.newsletterExtraFields||'').forEach((v,k)=>add(k,v));
     document.body.appendChild(f);f.submit();f.remove();$('#nlDone').hidden=false;$('#nlForm').querySelector('button').disabled=true;});})();
+
+
+/* =====================================================================
+   SCHEDE: una sezione alla volta, ciascuna con il suo indirizzo
+   (/cielo, /calendario, /lune, /chi-sono, /tema, /sinastria, /contattami, /social, /eventi)
+   ===================================================================== */
+const VIEWS={
+  home:{secs:['home'],title:'AstroQuack · astrologia con le piume'},
+  cielo:{secs:['cielo'],title:'Il cielo, giorno per giorno · AstroQuack'},
+  calendario:{secs:['calendario'],title:'Calendario dei transiti · AstroQuack'},
+  lune:{secs:['lune'],title:'Le lune del mese · AstroQuack'},
+  'chi-sono':{secs:['chi-sono'],title:'Chi sono · AstroQuack'},
+  tema:{secs:['tema'],title:'Tema natale e transiti · AstroQuack'},
+  sinastria:{secs:['sinastria'],title:'Sinastria · AstroQuack'},
+  contattami:{secs:['contattami'],title:'Scrivimi · AstroQuack'},
+  social:{secs:['social'],title:'Social · AstroQuack'},
+  eventi:{secs:['eventi','newsletter'],title:'Eventi · AstroQuack'}};
+const ALL_SECS=['home','cielo','calendario','lune','chi-sono','tema','sinastria','blog','contattami','social','eventi','newsletter'];
+const viewFromPath=p=>{const k=decodeURIComponent(p).replace(/^\/+|\/+$/g,'');return k===''?'home':(VIEWS[k]?k:null);};
+let CUR_VIEW=null;
+function showView(view,{push=false,replace=false}={}){
+  if(!VIEWS[view])view='home';
+  const conf=VIEWS[view];
+  ALL_SECS.forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('view-off',!conf.secs.includes(id));});
+  document.body.dataset.view=view;
+  document.title=conf.title;
+  const path=view==='home'?'/':'/'+view;
+  if(push&&location.pathname!==path)history.pushState({view},'',path);
+  else if(replace)history.replaceState({view},'',path+location.search);
+  // voce attiva in barra laterale, barra in basso e menu
+  $$('.nav a, .sheet-nav a').forEach(a=>{const href=a.getAttribute('href');const on=href===path;a.classList.toggle('on',on);if(on)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
+  // animazioni d’ingresso della scheda appena aperta
+  conf.secs.forEach(id=>{const el=document.getElementById(id);if(el)el.querySelectorAll('.reveal').forEach(r=>r.classList.add('in'));});
+  if(CUR_VIEW!==null){window.scrollTo({top:0,behavior:'instant'});
+    const h=document.querySelector('#'+conf.secs[0]+' h1, #'+conf.secs[0]+' h2');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true});}}
+  CUR_VIEW=view;
+}
+// clic sui link interni: cambio scheda senza ricaricare la pagina
+document.addEventListener('click',e=>{
+  if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+  const a=e.target.closest('a[href]');if(!a||a.target==='_blank'||a.hasAttribute('download'))return;
+  const url=new URL(a.getAttribute('href'),location.href);if(url.origin!==location.origin)return;
+  let view=null;
+  if(url.pathname===location.pathname&&url.hash&&VIEWS[url.hash.slice(1)])view=url.hash.slice(1);
+  else view=viewFromPath(url.pathname);
+  if(!view)return;              // /blog, /privacy, /admin: pagine vere, caricamento normale
+  e.preventDefault();
+  if($('#menuDlg')&&$('#menuDlg').open)$('#menuDlg').close();
+  showView(view,{push:true});
+});
+window.addEventListener('popstate',()=>showView(viewFromPath(location.pathname)||'home'));
+// all’avvio: indirizzo della scheda, oppure vecchi link con # (es. /#tema)
+(function(){
+  let view=viewFromPath(location.pathname);
+  const h=location.hash.slice(1);
+  if(h&&VIEWS[h]){showView(h,{replace:true});return;}
+  if(h==='blog'){location.replace('/blog');return;}
+  showView(view||'home');
+})();

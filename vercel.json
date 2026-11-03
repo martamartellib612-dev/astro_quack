@@ -152,5 +152,11 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/:view(cielo|calendario|lune|chi-sono|tema|sinastria|contattami|social|eventi)",
+      "destination": "/index.html"
+    }
   ]
 }

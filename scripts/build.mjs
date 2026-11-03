@@ -100,7 +100,7 @@ ${analytics}
 }
 const pageHead = current => `<header class="page-head night"><div class="in">
   <a class="brand" href="/" aria-label="AstroQuack, torna alla home">${logo}<span>AstroQuack</span></a>
-  <nav aria-label="Navigazione"><a href="/#cielo">Il cielo</a><a href="/#tema">Tema natale</a><a href="/blog"${current === 'blog' ? ' aria-current="page"' : ''}>Blog</a><a href="/#contattami">Scrivimi</a></nav>
+  <nav aria-label="Navigazione"><a href="/cielo">Il cielo</a><a href="/tema">Tema natale</a><a href="/blog"${current === 'blog' ? ' aria-current="page"' : ''}>Blog</a><a href="/contattami">Scrivimi</a></nav>
 </div></header>`;
 const pageFoot = `<footer class="site-foot night"><div class="in">${logo}<span>© AstroQuack · Calcoli astronomici: Swiss Ephemeris 2.10 © Astrodienst AG · <a href="${esc(SITE.repo)}" rel="noopener">Codice sorgente</a> con licenza AGPL-3.0 · <a href="/privacy">Privacy</a></span></div></footer>`;
 const card = p => {
@@ -173,7 +173,7 @@ ${pageHead('blog')}
     ${p.excerpt ? `<p class="lede">${esc(p.excerpt)}</p>` : ''}
     <div class="prose">${md(p.body)}</div>
     ${(p.signs || []).length ? `<p class="post-signs">${p.signs.map(i => `<span class="chip-s"><span class="g">${SIGNS[i][1] + VS}</span>${SIGNS[i][0]}</span>`).join('')}</p>` : ''}
-    <div class="post-cta"><p>Vuoi approfondire il tuo cielo?</p><a class="btn" href="/#contattami">Scrivimi</a></div>
+    <div class="post-cta"><p>Vuoi approfondire il tuo cielo?</p><a class="btn" href="/contattami">Scrivimi</a></div>
     ${rel.length ? `<h2 style="margin:44px 0 16px;font-size:2rem">Della stessa rubrica</h2><div class="blog-grid">${rel.map(card).join('')}</div>` : ''}
   </div>
 </main>

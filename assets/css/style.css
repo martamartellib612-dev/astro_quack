@@ -767,3 +767,11 @@ img{height:auto}
   .tr-nav{grid-template-columns:44px minmax(0,1fr) 44px}
   .xgrid th,.xgrid td{width:30px;min-width:30px;height:30px}
 }
+
+/* ---------- schede ---------- */
+.view-off{display:none!important}
+section.block{min-height:calc(100svh - 120px)}
+#newsletter{min-height:0}
+body[data-view="eventi"] #eventi{min-height:0}
+.hero h1:focus,section h2:focus{outline:none}
+@media (max-width:900px){section.block{min-height:calc(100svh - 96px)}}
