@@ -155,8 +155,40 @@
   ],
   "rewrites": [
     {
-      "source": "/:view(cielo|calendario|lune|chi-sono|tema|sinastria|contattami|social|eventi)",
-      "destination": "/index.html"
+      "source": "/cielo",
+      "destination": "/"
+    },
+    {
+      "source": "/calendario",
+      "destination": "/"
+    },
+    {
+      "source": "/lune",
+      "destination": "/"
+    },
+    {
+      "source": "/chi-sono",
+      "destination": "/"
+    },
+    {
+      "source": "/tema",
+      "destination": "/"
+    },
+    {
+      "source": "/sinastria",
+      "destination": "/"
+    },
+    {
+      "source": "/contattami",
+      "destination": "/"
+    },
+    {
+      "source": "/social",
+      "destination": "/"
+    },
+    {
+      "source": "/eventi",
+      "destination": "/"
     }
   ]
 }

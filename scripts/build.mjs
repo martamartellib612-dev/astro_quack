@@ -147,6 +147,12 @@ ${verify}<meta property="og:site_name" content="AstroQuack">
 <script type="application/ld+json">${JSON.stringify(homeLd).replace(/</g, '\\u003c')}</script>`);
 home = home.replace('</head>', `${icons}\n${analytics}\n</head>`).replace(/<link rel="icon" href="assets\/img\/logo.svg" type="image\/svg\+xml">\n?/, '');
 home = home.replace('<div class="blog-grid" id="blogGrid"></div>', `<div class="blog-grid" id="blogGrid">${live.slice(0, 6).map(card).join('')}</div>`);
+{
+  const soc = SITE.social || {};
+  home = home.replace(/<a data-social="(\w+)" href="[^"]*"/g, (m, k) => soc[k] ? `<a data-social="${k}" href="${esc(soc[k])}"` : m)
+    .replace(/<span data-handle="(\w+)">[^<]*<\/span>/g, (m, k) => soc[k + 'Handle'] ? `<span data-handle="${k}">${esc(soc[k + 'Handle'])}</span>` : m)
+    .replace('<a id="srcLink" href="https://github.com/"', `<a id="srcLink" href="${esc(SITE.repo)}"`);
+}
 fs.writeFileSync(path.join(OUT, 'index.html'), home);
 
 // ---------- pagine degli articoli ----------
