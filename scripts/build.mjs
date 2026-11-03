@@ -101,10 +101,14 @@ ${themeScript}
 ${analytics}
 </head>`;
 }
-const pageHead = current => `<header class="page-head night"><div class="in">
-  <a class="brand" href="/" aria-label="AstroQuack, torna alla home">${logo}<span>AstroQuack</span></a>
-  <nav aria-label="Navigazione"><a href="/cielo">Il cielo</a><a href="/tema">Tema natale</a><a href="/blog"${current === 'blog' ? ' aria-current="page"' : ''}>Blog</a><a href="/contattami">Scrivimi</a></nav>
-</div></header>`;
+// stessa barra laterale (e barra in basso su telefono) del sito principale, presa da index.html
+const INDEX_SRC = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+const RAIL = (INDEX_SRC.match(/<aside class="rail"[\s\S]*?<\/aside>/) || [''])[0];
+const SHEET = (INDEX_SRC.match(/<dialog id="menuDlg"[\s\S]*?<\/dialog>/) || [''])[0];
+const pageHead = current => `${RAIL}
+<a class="shell-brand" href="/" aria-label="AstroQuack, torna alla home">${logo}<span>AstroQuack</span></a>
+${SHEET}
+<script src="/assets/js/shell.js" defer></script>`;
 const pageFoot = `<footer class="site-foot night"><div class="in">${logo}<span>© AstroQuack · Calcoli astronomici: Swiss Ephemeris 2.10 © Astrodienst AG · <a href="${esc(SITE.repo)}" rel="noopener">Codice sorgente</a> con licenza AGPL-3.0 · <a href="/privacy">Privacy</a></span></div></footer>`;
 const card = p => {
   const r = rub(p.rubrica);
@@ -291,7 +295,7 @@ for (const p of all) {
       { '@type': 'ListItem', position: 2, name: 'Blog', item: BASE + '/blog' },
       { '@type': 'ListItem', position: 3, name: p.title, item: url }] }] };
   const html = head({ title: `${p.title} · AstroQuack`, desc: excerpt(p), url, image: abs(ogImg(p)), type: 'article', jsonld: ld, noindex: future }) + `
-<body>
+<body class="shell-page">
 ${pageHead('blog')}
 <main class="article">
   <p class="crumbs"><a href="/">AstroQuack</a> › <a href="/blog">Blog</a> › <a href="/blog?rubrica=${esc(r.id)}">${esc(r.name)}</a></p>
@@ -319,7 +323,7 @@ ${pageFoot}
     blogPost: live.map(p => ({ '@type': 'BlogPosting', headline: p.title, url: `${BASE}/blog/${encodeURIComponent(p.slug)}`, datePublished: p.date })) };
   const chips = [{ id: 'tutte', name: 'Tutte' }, ...RUBRICHE].map(r => `<a class="chipf" href="/blog${r.id === 'tutte' ? '' : '?rubrica=' + r.id}" data-r="${r.id}">${esc(r.name)}</a>`).join('');
   const html = head({ title: 'Blog · AstroQuack', desc, url, image: abs('/assets/img/og/paper.jpg'), jsonld: ld }) + `
-<body>
+<body class="shell-page">
 ${pageHead('blog')}
 <main class="blog-page">
   <h1 style="font-size:clamp(2.8rem,6vw,5rem)">Il blog delle <em style="color:var(--pink)">rubriche</em></h1>
@@ -357,7 +361,7 @@ fs.writeFileSync(path.join(OUT, 'manifest.webmanifest'), JSON.stringify({
   const today = new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Rome' }).format(now);
   const url = `${BASE}/privacy`;
   const html = head({ title: 'Informativa privacy · AstroQuack', desc: 'Come AstroQuack tratta i dati personali di chi visita il sito, scrive dal modulo di contatto o si iscrive alla newsletter.', url, image: abs('/assets/img/og/home.jpg'), jsonld: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Informativa privacy', url } }) + `
-<body>
+<body class="shell-page">
 ${pageHead('')}
 <main class="article prose-page">
   <h1 class="post-title">Informativa <em style="color:var(--pink)">privacy</em></h1>
@@ -391,7 +395,7 @@ ${pageFoot}
 
 // ---------- pagina non trovata ----------
 fs.writeFileSync(path.join(OUT, '404.html'), head({ title: 'Pagina non trovata · AstroQuack', desc: 'Questa pagina si è persa tra le stelle.', url: `${BASE}/404`, image: abs('/assets/img/og/home.jpg'), jsonld: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Pagina non trovata' }, noindex: true }) + `
-<body class="night" style="min-height:100svh;display:flex;flex-direction:column">
+<body class="shell-page night" style="min-height:100svh;display:flex;flex-direction:column">
 ${pageHead('')}
 <main class="article" style="flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center">
   <p class="post-meta" style="font-size:1rem">errore 404</p>

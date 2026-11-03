@@ -796,3 +796,16 @@ h2.h3{font-size:1.9rem}
 .faq summary::after{content:"+";font-family:var(--data);font-size:1.4rem;color:var(--pink);transition:transform .2s}
 .faq details[open] summary::after{transform:rotate(45deg)}
 .faq details{padding:0}
+
+/* ---------- pagine del blog, privacy e 404 con la stessa struttura del sito ---------- */
+.shell-page main,.shell-page .site-foot{margin-left:var(--rail)}
+.shell-page .rail-sky{display:none}
+.shell-brand{display:none}
+.shell-page .article,.shell-page .blog-page{padding-top:56px}
+@media (max-width:900px){
+  .shell-brand{display:flex;align-items:center;gap:10px;padding:calc(14px + env(safe-area-inset-top,0px)) 18px 0;color:var(--ink);text-decoration:none}
+  .shell-brand .logo{width:40px;height:auto}
+  .shell-brand span{font-family:var(--display);font-style:italic;font-size:1.5rem}
+  .shell-page .article,.shell-page .blog-page{padding-top:18px}
+  .shell-page .site-foot{padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}
+}
