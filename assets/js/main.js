@@ -776,7 +776,9 @@ function showView(view,{push=false,replace=false}={}){
   const conf=VIEWS[view];
   ALL_SECS.forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('view-off',!conf.secs.includes(id));});
   document.body.dataset.view=view;
-  document.title=conf.title;
+  const seo=(window.SEO_VIEWS||{})[view];document.title=seo?seo.title:conf.title;
+  if(seo){const md=document.querySelector('meta[name="description"]');if(md)md.setAttribute('content',seo.desc);}
+  const can=document.querySelector('link[rel="canonical"]');if(can){try{can.href=new URL(view==='home'?'/':'/'+view,can.href).href;}catch(e){}}
   const path=view==='home'?'/':'/'+view;
   if(push&&location.pathname!==path)history.pushState({view},'',path);
   else if(replace)history.replaceState({view},'',path+location.search);

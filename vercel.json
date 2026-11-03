@@ -153,42 +153,17 @@
       ]
     }
   ],
-  "rewrites": [
+  "redirects": [
     {
-      "source": "/cielo",
-      "destination": "/"
-    },
-    {
-      "source": "/calendario",
-      "destination": "/"
-    },
-    {
-      "source": "/lune",
-      "destination": "/"
-    },
-    {
-      "source": "/chi-sono",
-      "destination": "/"
-    },
-    {
-      "source": "/tema",
-      "destination": "/"
-    },
-    {
-      "source": "/sinastria",
-      "destination": "/"
-    },
-    {
-      "source": "/contattami",
-      "destination": "/"
-    },
-    {
-      "source": "/social",
-      "destination": "/"
-    },
-    {
-      "source": "/eventi",
-      "destination": "/"
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "astroquack-qqiq.vercel.app"
+        }
+      ],
+      "destination": "https://www.astroquack.it/:path*",
+      "permanent": true
     }
   ]
 }
