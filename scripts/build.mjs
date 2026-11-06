@@ -190,13 +190,13 @@ const SEO_VIEWS = {
     desc: 'Scrivi ad AstroQuack per una lettura del tema natale o per domande e curiosità sull’astrologia, online o in presenza.' },
   social: { path: '/social', title: 'AstroQuack su Instagram, TikTok e Spotify', crumb: 'Social',
     desc: 'Segui AstroQuack su Instagram, TikTok e Spotify: le rubriche sui transiti della settimana, Paperelle in Love, SuperQuack e le playlist del segno del mese.' },
-  oroscopo: { path: '/oroscopo', title: 'Oroscopo della settimana: la classifica dei segni · AstroQuack', crumb: 'Oroscopo',
+  oroscopa: { path: '/oroscopa', title: 'Oroscopa della settimana: la classifica dei segni · AstroQuack', crumb: 'Oroscopa',
     desc: 'La classifica dei dodici segni della settimana secondo AstroQuack, dal primo all’ultimo posto, con due righe per ogni segno.' },
   eventi: { path: '/eventi', title: 'Eventi di astrologia: workshop e dirette · AstroQuack', crumb: 'Eventi',
     desc: 'Workshop, dirette e incontri dal vivo di AstroQuack: astrologia, mitologia e femminismi. Gli eventi in programma e l’archivio con foto e video.' } };
 const VIEW_SECS = { home: ['home'], cielo: ['cielo'], calendario: ['calendario'], lune: ['lune'], 'chi-sono': ['chi-sono'], tema: ['tema'], sinastria: ['sinastria'],
-  contattami: ['contattami'], social: ['social'], oroscopo: ['oroscopo'], eventi: ['eventi', 'newsletter'] };
-const ALL_SECS = ['home', 'cielo', 'calendario', 'lune', 'chi-sono', 'tema', 'sinastria', 'blog', 'contattami', 'social', 'oroscopo', 'eventi', 'newsletter'];
+  contattami: ['contattami'], social: ['social'], oroscopa: ['oroscopa'], eventi: ['eventi', 'newsletter'] };
+const ALL_SECS = ['home', 'cielo', 'calendario', 'lune', 'chi-sono', 'tema', 'sinastria', 'blog', 'contattami', 'social', 'oroscopa', 'eventi', 'newsletter'];
 
 // dati astronomici calcolati qui, così finiscono nel testo della pagina (leggibile da Google)
 let AQN = null;

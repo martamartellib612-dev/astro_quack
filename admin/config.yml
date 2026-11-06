@@ -78,7 +78,7 @@ collections:
               - { label: Immagine, name: src, widget: image, required: false }
 
   - name: oroscopo
-    label: Oroscopo – classifica dei segni
+    label: Oroscopa – classifica dei segni
     label_singular: Classifica
     folder: content/oroscopo
     format: json

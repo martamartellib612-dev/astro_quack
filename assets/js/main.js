@@ -416,7 +416,7 @@ cForm.addEventListener('submit',e=>{
 });
 $('#cAgain').onclick=()=>{cForm.reset();$('#cCount').textContent='0 / 3000';cForm.hidden=false;$('#contactDone').hidden=true;cStart=Date.now();};
 
-/* ======== oroscopo: classifica dei segni ======== */
+/* ======== oroscopa: classifica dei segni ======== */
 const ORO=window.OROSCOPO||[];
 const ORO_SIGNS=['Ariete','Toro','Gemelli','Cancro','Leone','Vergine','Bilancia','Scorpione','Sagittario','Capricorno','Acquario','Pesci'];
 const ORO_GLYPH=['\u2648','\u2649','\u264A','\u264B','\u264C','\u264D','\u264E','\u264F','\u2650','\u2651','\u2652','\u2653'];
@@ -782,9 +782,9 @@ const VIEWS={
   sinastria:{secs:['sinastria'],title:'Sinastria · AstroQuack'},
   contattami:{secs:['contattami'],title:'Scrivimi · AstroQuack'},
   social:{secs:['social'],title:'Social · AstroQuack'},
-  oroscopo:{secs:['oroscopo'],title:'Oroscopo della settimana · AstroQuack'},
+  oroscopa:{secs:['oroscopa'],title:'Oroscopa della settimana · AstroQuack'},
   eventi:{secs:['eventi','newsletter'],title:'Eventi · AstroQuack'}};
-const ALL_SECS=['home','cielo','calendario','lune','chi-sono','tema','sinastria','blog','contattami','social','oroscopo','eventi','newsletter'];
+const ALL_SECS=['home','cielo','calendario','lune','chi-sono','tema','sinastria','blog','contattami','social','oroscopa','eventi','newsletter'];
 const viewFromPath=p=>{const k=decodeURIComponent(p).replace(/^\/+|\/+$/g,'');return k===''?'home':(VIEWS[k]?k:null);};
 let CUR_VIEW=null;
 function showView(view,{push=false,replace=false}={}){

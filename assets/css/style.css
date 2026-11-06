@@ -810,7 +810,7 @@ h2.h3{font-size:1.9rem}
   .shell-page .site-foot{padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}
 }
 
-/* oroscopo: classifica dei segni */
+/* oroscopa: classifica dei segni */
 .oro-pick select{font:inherit;padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);margin:0 0 16px}
 .oro-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:0 0 6px}
 .oro-head h3{margin:0;font-family:var(--display);font-weight:400;font-size:1.6rem}
