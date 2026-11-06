@@ -1,0 +1,56 @@
+{
+  "title": "La classifica della settimana di AstroQuack",
+  "status": "bozza",
+  "segni": [
+    {
+      "segno": "Ariete",
+      "posizione": 9
+    },
+    {
+      "segno": "Toro",
+      "posizione": 12
+    },
+    {
+      "segno": "Gemelli",
+      "posizione": 7
+    },
+    {
+      "segno": "Cancro",
+      "posizione": 4
+    },
+    {
+      "segno": "Leone",
+      "posizione": 10
+    },
+    {
+      "segno": "Vergine",
+      "posizione": 2
+    },
+    {
+      "segno": "Bilancia",
+      "posizione": 3
+    },
+    {
+      "segno": "Scorpione",
+      "posizione": 1
+    },
+    {
+      "segno": "Sagittario",
+      "posizione": 8
+    },
+    {
+      "segno": "Capricorno",
+      "posizione": 6
+    },
+    {
+      "segno": "Acquario",
+      "posizione": 11
+    },
+    {
+      "segno": "Pesci",
+      "posizione": 5
+    }
+  ],
+  "date": "2026-11-06T19:53:00.000+01:00",
+  "periodo": "1 - 9 Novembre"
+}
