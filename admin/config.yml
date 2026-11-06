@@ -49,33 +49,78 @@ collections:
 
   - name: eventi
     label: Eventi
-    files:
-      - name: elenco
-        label: Elenco degli eventi
-        file: content/events.json
-        fields:
-          - label: Eventi
-            name: events
+    label_singular: Evento
+    folder: content/events
+    format: json
+    extension: json
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{date}} · {{title}}"
+    sortable_fields: [date, title]
+    fields:
+          - { label: Data, name: date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+          - { label: Ora, name: time, widget: string, required: false, hint: "Per esempio 18:30" }
+          - { label: Titolo, name: title, widget: string }
+          - { label: Luogo, name: where, widget: string, required: false }
+          - { label: Descrizione, name: text, widget: text, required: false }
+          - { label: Link (iscrizione o biglietti), name: link, widget: string, required: false }
+          - { label: Immagine principale, name: image, widget: image, required: false }
+          - label: Foto e video
+            name: media
             widget: list
-            label_singular: evento
-            summary: "{{fields.date}} · {{fields.title}}"
+            required: false
+            summary: "{{fields.type}} · {{fields.label}}"
             fields:
-              - { label: Data, name: date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
-              - { label: Ora, name: time, widget: string, required: false, hint: "Per esempio 18:30" }
-              - { label: Titolo, name: title, widget: string }
-              - { label: Luogo, name: where, widget: string, required: false }
-              - { label: Descrizione, name: text, widget: text, required: false }
-              - { label: Link (iscrizione o biglietti), name: link, widget: string, required: false }
-              - { label: Immagine principale, name: image, widget: image, required: false }
-              - label: Foto e video
-                name: media
-                widget: list
-                required: false
-                summary: "{{fields.type}} · {{fields.label}}"
-                fields:
-                  - { label: Tipo, name: type, widget: select, options: [foto, video], default: foto }
-                  - { label: Didascalia, name: label, widget: string }
-                  - { label: Immagine, name: src, widget: image, required: false }
+              - { label: Tipo, name: type, widget: select, options: [foto, video], default: foto }
+              - { label: Didascalia, name: label, widget: string }
+              - { label: Immagine, name: src, widget: image, required: false }
+
+  - name: oroscopo
+    label: Oroscopo – classifica dei segni
+    label_singular: Classifica
+    folder: content/oroscopo
+    format: json
+    extension: json
+    create: true
+    delete: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    identifier_field: title
+    summary: "{{periodo}} · {{title}} · {{status}}"
+    sortable_fields: [date, title]
+    fields:
+      - { label: Titolo, name: title, widget: string, default: "La classifica della settimana" }
+      - { label: Periodo, name: periodo, widget: string, hint: "Come appare sul sito, per esempio «1 – 8 novembre»" }
+      - { label: Data di pubblicazione, name: date, widget: datetime, hint: "Sul sito compare la classifica pubblicata più recente. Con una data futura compare da quel giorno." }
+      - { label: Stato, name: status, widget: select, options: [pubblicato, bozza], default: bozza }
+      - { label: Introduzione, name: intro, widget: text, required: false, hint: "Facoltativa: due righe sopra la classifica." }
+      - label: Segni
+        name: segni
+        widget: list
+        label_singular: segno
+        collapsed: true
+        min: 12
+        max: 12
+        summary: "{{fields.posizione}}° · {{fields.segno}}"
+        hint: "Un elemento per ogni segno. L’ordine qui non conta: il sito ordina per posizione."
+        default:
+          - { segno: Ariete }
+          - { segno: Toro }
+          - { segno: Gemelli }
+          - { segno: Cancro }
+          - { segno: Leone }
+          - { segno: Vergine }
+          - { segno: Bilancia }
+          - { segno: Scorpione }
+          - { segno: Sagittario }
+          - { segno: Capricorno }
+          - { segno: Acquario }
+          - { segno: Pesci }
+        fields:
+          - { label: Segno, name: segno, widget: select, options: [Ariete, Toro, Gemelli, Cancro, Leone, Vergine, Bilancia, Scorpione, Sagittario, Capricorno, Acquario, Pesci] }
+          - { label: Posizione in classifica, name: posizione, widget: number, value_type: int, min: 1, max: 12 }
+          - { label: Descrizione, name: testo, widget: text, required: false, hint: "Una o due frasi." }
 
   - name: impostazioni
     label: Impostazioni

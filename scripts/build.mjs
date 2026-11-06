@@ -5,6 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
+import { pathToFileURL } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const OUT = path.join(ROOT, 'dist');
@@ -20,7 +21,15 @@ const POSTS = (fs.existsSync(POSTS_DIR) ? fs.readdirSync(POSTS_DIR) : []).filter
   return { ...p, slug: f.replace(/\.json$/, ''), date: new Date(p.date || Date.now()).toISOString(),
     signs: (p.signs || []).map(x => typeof x === 'number' ? x : SIGN_NAMES.indexOf(x)).filter(i => i >= 0) };
 });
-const EVENTS = ((fs.existsSync(path.join(ROOT, 'content/events.json')) ? readJSON('content/events.json') : {}).events || []).map(e => ({ ...e, date: String(e.date || '').slice(0, 10) }));
+const readDir = d => { const full = path.join(ROOT, d); return fs.existsSync(full) ? fs.readdirSync(full).filter(f => f.endsWith('.json')).map(f => ({ ...readJSON(d + '/' + f), _file: f.replace(/\.json$/, '') })) : []; };
+// eventi: un file per evento in content/events/ (più quelli del vecchio content/events.json, se c’è ancora)
+const EVENTS = [...readDir('content/events'), ...((fs.existsSync(path.join(ROOT, 'content/events.json')) ? readJSON('content/events.json') : {}).events || [])]
+  .filter(e => e && e.title).map(({ _file, ...e }) => ({ ...e, date: String(e.date || '').slice(0, 10) }));
+// oroscopo: una classifica per file in content/oroscopo/; sul sito le pubblicate con data già passata, la più recente per prima
+const OROSCOPO = readDir('content/oroscopo').filter(o => o.status !== 'bozza' && o.date && new Date(o.date) <= new Date())
+  .sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 12)
+  .map(o => ({ id: o._file, title: o.title || 'La classifica della settimana', periodo: o.periodo || '', intro: o.intro || '', date: o.date,
+    segni: (o.segni || []).map(x => ({ s: SIGN_NAMES.indexOf(x.segno), p: Number(x.posizione) || 99, t: x.testo || '' })).filter(x => x.s >= 0).sort((a, b) => a.p - b.p) }));
 const BASE = String(SITE.url || '').replace(/\/+$/, '');
 const mainJs = fs.readFileSync(path.join(ROOT, 'assets/js/main.js'), 'utf8');
 const RUBRICHE = vm.runInNewContext('(' + mainJs.match(/const RUBRICHE=(\[[\s\S]*?\]);/)[1] + ')');
@@ -71,7 +80,9 @@ const icons = `<link rel="icon" href="/assets/img/logo.svg" type="image/svg+xml"
 <meta name="theme-color" content="#170815">`;
 const analytics = SITE.analytics ? '<script defer src="/_vercel/insights/script.js"></script>' : '';
 const themeScript = `<script src="/assets/js/theme.js"></script>`;
-const ORG = { '@type': 'Organization', name: 'AstroQuack', url: BASE + '/', logo: abs('/assets/img/logo.svg') };
+const SAME_AS = Object.entries(SITE.social || {}).filter(([k, v]) => !/Handle$/.test(k) && /^https:\/\//.test(String(v)) && !/^https:\/\/open\.spotify\.com\/?$/.test(v)).map(([, v]) => v);
+const ORG = { '@type': 'Organization', '@id': BASE + '/#org', name: 'AstroQuack', url: BASE + '/', logo: abs('/assets/icons/icon-512.png'), email: SITE.email,
+  ...(SAME_AS.length ? { sameAs: SAME_AS } : {}), ...(SITE.titolare ? { founder: { '@type': 'Person', name: String(SITE.titolare).split(',')[0].trim() } } : {}) };
 
 function head({ title, desc, url, image, type = 'website', jsonld, noindex }) {
   return `<!doctype html>
@@ -98,10 +109,14 @@ ${themeScript}
 ${analytics}
 </head>`;
 }
-const pageHead = current => `<header class="page-head night"><div class="in">
-  <a class="brand" href="/" aria-label="AstroQuack, torna alla home">${logo}<span>AstroQuack</span></a>
-  <nav aria-label="Navigazione"><a href="/#cielo">Il cielo</a><a href="/#tema">Tema natale</a><a href="/blog"${current === 'blog' ? ' aria-current="page"' : ''}>Blog</a><a href="/#contattami">Scrivimi</a></nav>
-</div></header>`;
+// stessa barra laterale (e barra in basso su telefono) del sito principale, presa da index.html
+const INDEX_SRC = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+const RAIL = (INDEX_SRC.match(/<aside class="rail"[\s\S]*?<\/aside>/) || [''])[0];
+const SHEET = (INDEX_SRC.match(/<dialog id="menuDlg"[\s\S]*?<\/dialog>/) || [''])[0];
+const pageHead = current => `${RAIL}
+<a class="shell-brand" href="/" aria-label="AstroQuack, torna alla home">${logo}<span>AstroQuack</span></a>
+${SHEET}
+<script src="/assets/js/shell.js" defer></script>`;
 const pageFoot = `<footer class="site-foot night"><div class="in">${logo}<span>© AstroQuack · Calcoli astronomici: Swiss Ephemeris 2.10 © Astrodienst AG · <a href="${esc(SITE.repo)}" rel="noopener">Codice sorgente</a> con licenza AGPL-3.0 · <a href="/privacy">Privacy</a></span></div></footer>`;
 const card = p => {
   const r = rub(p.rubrica);
@@ -147,7 +162,135 @@ ${verify}<meta property="og:site_name" content="AstroQuack">
 <script type="application/ld+json">${JSON.stringify(homeLd).replace(/</g, '\\u003c')}</script>`);
 home = home.replace('</head>', `${icons}\n${analytics}\n</head>`).replace(/<link rel="icon" href="assets\/img\/logo.svg" type="image\/svg\+xml">\n?/, '');
 home = home.replace('<div class="blog-grid" id="blogGrid"></div>', `<div class="blog-grid" id="blogGrid">${live.slice(0, 6).map(card).join('')}</div>`);
-fs.writeFileSync(path.join(OUT, 'index.html'), home);
+{
+  const soc = SITE.social || {};
+  home = home.replace(/<a data-social="(\w+)" href="[^"]*"/g, (m, k) => soc[k] ? `<a data-social="${k}" href="${esc(soc[k])}"` : m)
+    .replace(/<span data-handle="(\w+)">[^<]*<\/span>/g, (m, k) => soc[k + 'Handle'] ? `<span data-handle="${k}">${esc(soc[k + 'Handle'])}</span>` : m)
+    .replace('<a id="srcLink" href="https://github.com/"', `<a id="srcLink" href="${esc(SITE.repo)}"`);
+}
+// ---------- schede come pagine vere: titolo, descrizione, canonical, dati strutturati ----------
+const YEAR = Number(new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome', year: 'numeric' }).format(now));
+const MONTH_NAME = new Intl.DateTimeFormat('it-IT', { month: 'long', year: 'numeric', timeZone: 'Europe/Rome' }).format(now);
+const SEO_VIEWS = {
+  home: { path: '/', title: 'AstroQuack · astrologia evolutiva, tema natale e transiti', crumb: null,
+    desc: 'Astrologia con le piume: il cielo di oggi, il calendario dei transiti, le lune del mese e il calcolo gratuito del tema natale con Swiss Ephemeris. Rubriche, eventi e letture.' },
+  cielo: { path: '/cielo', title: 'Il cielo di oggi: posizione dei pianeti nei segni · AstroQuack', crumb: 'Il cielo di oggi',
+    desc: 'Dove si trovano oggi Sole, Luna e pianeti: segno, grado e retrogradazioni. Scegli qualsiasi giorno dal 1800 al 2399 e guarda come si muove la ruota dello zodiaco.' },
+  calendario: { path: '/calendario', title: 'Calendario astrologico dei transiti mese per mese · AstroQuack', crumb: 'Calendario astrologico',
+    desc: 'I transiti giorno per giorno: Luna nei segni, fasi lunari, ingressi dei pianeti, retrogradazioni e aspetti esatti, con l’orario italiano al minuto.' },
+  lune: { path: '/lune', title: `Luna nuova e Luna piena ${YEAR}: date, orari e segni · AstroQuack`, crumb: 'Luna nuova e Luna piena',
+    desc: `Tutte le lune nuove e piene del ${YEAR} mese per mese, con segno, grado e orario italiano, e il calendario lunare con la fase di ogni giorno.` },
+  'chi-sono': { path: '/chi-sono', title: 'Chi sono · AstroQuack, astrologia con le piume', crumb: 'Chi sono',
+    desc: 'Dietro AstroQuack: astrologia evolutiva, mitologia e storie di donne. Le rubriche Paper-News, Paperelle in Love, Born in the Quack, SuperQuack e le altre.' },
+  tema: { path: '/tema', title: 'Tema natale gratis online: Ascendente, case e aspetti · AstroQuack', crumb: 'Tema natale',
+    desc: 'Calcola gratis il tuo tema natale: Ascendente, pianeti nei segni e nelle case, aspetti, Chirone, Lilith e i transiti di oggi sulla tua carta, con la precisione di Swiss Ephemeris.' },
+  sinastria: { path: '/sinastria', title: 'Sinastria di coppia gratis: compatibilità astrologica · AstroQuack', crumb: 'Sinastria',
+    desc: 'Confronta due temi natali: doppia ruota, aspetti tra i pianeti dei partner e pianeti nelle case dell’altro. Calcolo gratuito con Swiss Ephemeris.' },
+  contattami: { path: '/contattami', title: 'Contatti: chiedi una lettura del tema natale · AstroQuack', crumb: 'Contatti',
+    desc: 'Scrivi ad AstroQuack per una lettura del tema natale o per domande e curiosità sull’astrologia, online o in presenza.' },
+  social: { path: '/social', title: 'AstroQuack su Instagram, TikTok e Spotify', crumb: 'Social',
+    desc: 'Segui AstroQuack su Instagram, TikTok e Spotify: le rubriche sui transiti della settimana, Paperelle in Love, SuperQuack e le playlist del segno del mese.' },
+  oroscopo: { path: '/oroscopo', title: 'Oroscopo della settimana: la classifica dei segni · AstroQuack', crumb: 'Oroscopo',
+    desc: 'La classifica dei dodici segni della settimana secondo AstroQuack, dal primo all’ultimo posto, con due righe per ogni segno.' },
+  eventi: { path: '/eventi', title: 'Eventi di astrologia: workshop e dirette · AstroQuack', crumb: 'Eventi',
+    desc: 'Workshop, dirette e incontri dal vivo di AstroQuack: astrologia, mitologia e femminismi. Gli eventi in programma e l’archivio con foto e video.' } };
+const VIEW_SECS = { home: ['home'], cielo: ['cielo'], calendario: ['calendario'], lune: ['lune'], 'chi-sono': ['chi-sono'], tema: ['tema'], sinastria: ['sinastria'],
+  contattami: ['contattami'], social: ['social'], oroscopo: ['oroscopo'], eventi: ['eventi', 'newsletter'] };
+const ALL_SECS = ['home', 'cielo', 'calendario', 'lune', 'chi-sono', 'tema', 'sinastria', 'blog', 'contattami', 'social', 'oroscopo', 'eventi', 'newsletter'];
+
+// dati astronomici calcolati qui, così finiscono nel testo della pagina (leggibile da Google)
+let AQN = null;
+try {
+  await import(pathToFileURL(path.join(ROOT, 'assets/js/swisseph-bundle.mjs')).href);
+  vm.runInThisContext(fs.readFileSync(path.join(ROOT, 'assets/js/engine.js'), 'utf8') + ';globalThis.AQ=AQ;');
+  const wasm = fs.readFileSync(path.join(ROOT, 'assets/swisseph/swisseph.wasm')), data = fs.readFileSync(path.join(ROOT, 'assets/swisseph/swisseph.data'));
+  await globalThis.AQ.init({ instantiateWasm: (i, cb) => { WebAssembly.instantiate(wasm, i).then(r => cb(r.instance)); return {}; },
+    getPreloadedPackage: () => data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength), locateFile: p => p });
+  AQN = globalThis.AQ;
+} catch (e) { console.warn('SEO: calcoli astronomici non disponibili in generazione:', e.message); }
+const romeDate = (y, m, d, h = 0) => AQN.localToUTC(y, m, d, h, 0, 'Europe/Rome').date;
+const fmtWhen = new Intl.DateTimeFormat('it-IT', { weekday: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Rome' });
+const fmtDay = new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'short', timeZone: 'Europe/Rome' });
+const fmtHM = new Intl.DateTimeFormat('it-IT', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Rome' });
+const ymKey = d => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit' }).format(d);
+let LUNE_HTML = '', CAL_HTML = '', LUNE_LIST = [];
+if (AQN) {
+  try {
+    const lun = AQN.events(romeDate(YEAR, 1, 1), romeDate(YEAR + 1, 1, 1), { moon: false, aspects: false, planets: false }).filter(e => e.phase === 0 || e.phase === 180);
+    LUNE_LIST = lun;
+    for (let m = 1; m <= 12; m++) {
+      const key = `${YEAR}-${String(m).padStart(2, '0')}`, items = lun.filter(e => ymKey(e.date) === key);
+      const mName = new Intl.DateTimeFormat('it-IT', { month: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(YEAR, m - 1, 15)));
+      LUNE_HTML += `<article class="lm"><h4>${mName}</h4><ul>${items.map(e => { const f = AQN.fmt(e.lon);
+        return `<li><div><b>${e.phase === 180 ? 'Luna piena' : 'Luna nuova'} in ${f.sign[0]}</b><span>${fmtWhen.format(e.date)} · ${f.text} ${f.sign[0]}</span></div></li>`; }).join('')}</ul></article>`;
+    }
+    const [cy, cm] = ymKey(now).split('-').map(Number);
+    const ev = AQN.events(romeDate(cy, cm, 1), romeDate(cm === 12 ? cy + 1 : cy, cm === 12 ? 1 : cm + 1, 1), { moon: false, aspects: false });
+    const txt = e => { const f = e.lon != null ? AQN.fmt(e.lon) : null;
+      if (e.type === 'phase') return `${e.name} a ${f.text} ${f.sign[0]}`;
+      if (e.type === 'ingress') return `${e.name} entra in ${AQN.SIGNS[e.sign][0]}${e.retro ? ' (retrogrado)' : ''}`;
+      if (e.type === 'station') return `${e.name} ${e.retro ? 'diventa retrogrado' : 'torna diretto'} a ${f.text} ${f.sign[0]}`; return ''; };
+    CAL_HTML = ev.filter(e => ['phase', 'ingress', 'station'].includes(e.type)).map(e => `<li><time>${fmtDay.format(e.date)}</time><span class="g" aria-hidden="true"></span><span>${esc(txt(e))} <small>ore ${fmtHM.format(e.date)}</small></span></li>`).join('');
+  } catch (e) { console.warn('SEO: dati astronomici non generati:', e.message); }
+}
+
+const crumbs = (v) => ({ '@type': 'BreadcrumbList', itemListElement: [
+  { '@type': 'ListItem', position: 1, name: 'AstroQuack', item: BASE + '/' },
+  { '@type': 'ListItem', position: 2, name: SEO_VIEWS[v].crumb, item: BASE + SEO_VIEWS[v].path }] });
+const faqLd = () => {
+  const items = [...home.matchAll(/<details><summary>([^<]+)<\/summary><p>([\s\S]*?)<\/p><\/details>/g)];
+  return items.length ? { '@type': 'FAQPage', mainEntity: items.map(m => ({ '@type': 'Question', name: m[1], acceptedAnswer: { '@type': 'Answer', text: m[2].replace(/<[^>]+>/g, '') } })) } : null;
+};
+const eventLd = () => EVENTS.filter(e => e.date && e.title).map(e => ({ '@type': 'Event', name: e.title, description: e.text || undefined,
+  startDate: e.time ? `${e.date}T${e.time}:00${(() => { try { const o = AQN ? AQN.localToUTC(...e.date.split('-').map(Number), ...e.time.split(':').map(Number), 'Europe/Rome').offset : 60; return (o >= 0 ? '+' : '-') + String(Math.floor(Math.abs(o) / 60)).padStart(2, '0') + ':' + String(Math.abs(o) % 60).padStart(2, '0'); } catch (x) { return '+01:00'; } })()}` : e.date,
+  eventAttendanceMode: /online|live|twitch|instagram|diretta/i.test(`${e.where} ${e.title}`) ? 'https://schema.org/OnlineEventAttendanceMode' : 'https://schema.org/OfflineEventAttendanceMode',
+  eventStatus: 'https://schema.org/EventScheduled',
+  location: /online|live|twitch|instagram/i.test(e.where || '') ? { '@type': 'VirtualLocation', url: BASE + '/eventi' } : { '@type': 'Place', name: e.where || 'Roma', address: e.where || 'Roma' },
+  image: e.image ? abs(e.image.startsWith('/') ? e.image : '/' + e.image) : abs('/assets/img/og/home.jpg'),
+  organizer: { '@id': BASE + '/#org' }, url: BASE + '/eventi' }));
+const appLd = (name, desc, path) => ({ '@type': 'WebApplication', name, description: desc, url: BASE + path, applicationCategory: 'LifestyleApplication',
+  operatingSystem: 'Web', inLanguage: 'it-IT', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' }, publisher: { '@id': BASE + '/#org' } });
+function ldFor(v) {
+  const g = [ORG];
+  const page = { '@type': v === 'contattami' ? 'ContactPage' : v === 'chi-sono' ? 'AboutPage' : 'WebPage', '@id': BASE + SEO_VIEWS[v].path + '#page',
+    name: SEO_VIEWS[v].title, description: SEO_VIEWS[v].desc, url: BASE + SEO_VIEWS[v].path, inLanguage: 'it-IT', isPartOf: { '@type': 'WebSite', name: 'AstroQuack', url: BASE + '/' } };
+  if (v === 'home') g.push({ '@type': 'WebSite', name: 'AstroQuack', url: BASE + '/', inLanguage: 'it-IT', description: SEO_VIEWS.home.desc, publisher: { '@id': BASE + '/#org' } });
+  else { g.push(page, crumbs(v)); }
+  if (v === 'tema') { g.push(appLd('Calcolatore del tema natale AstroQuack', SEO_VIEWS.tema.desc, '/tema')); const f = faqLd(); if (f) g.push(f); }
+  if (v === 'sinastria') g.push(appLd('Calcolatore di sinastria AstroQuack', SEO_VIEWS.sinastria.desc, '/sinastria'));
+  if (v === 'eventi') g.push(...eventLd());
+  return { '@context': 'https://schema.org', '@graph': g };
+}
+function pageFor(v) {
+  const S = SEO_VIEWS[v], url = BASE + (S.path === '/' ? '/' : S.path);
+  let h = home;
+  h = h.replace(/<title>[^<]*<\/title>/, `<title>${esc(S.title)}</title>`)
+    .replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${esc(S.desc)}">`)
+    .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${url}">`)
+    .replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${esc(S.title)}">`)
+    .replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${esc(S.desc)}">`)
+    .replace(/<meta property="og:url" content="[^"]*">/, `<meta property="og:url" content="${url}">`)
+    .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, `<script type="application/ld+json">${JSON.stringify(ldFor(v)).replace(/</g, '\\u003c')}</script>`);
+  // solo la scheda richiesta è visibile già nell’HTML
+  for (const id of ALL_SECS) {
+    if (VIEW_SECS[v].includes(id)) continue;
+    h = h.replace(new RegExp(`(<(?:section|header) class="[^"]*)("[^>]*\\sid="${id}")`), `$1 view-off$2`);
+  }
+  // titolo principale della scheda come H1
+  if (v !== 'home') {
+    const at = h.search(new RegExp(`<section [^>]*id="${VIEW_SECS[v][0]}"`));
+    if (at > -1) { const i = h.indexOf('<h2', at), j = h.indexOf('</h2>', i);
+      if (i > -1 && j > -1) h = h.slice(0, i) + '<h1 class="h2"' + h.slice(i + 3, j) + '</h1>' + h.slice(j + 5); }
+  }
+  // un solo H1 per pagina: nelle schede il titolo AstroQuack dell’apertura diventa testo normale
+  if (v !== 'home') h = h.replace('<h1><span>Astro</span><span class="i">Quack</span></h1>', '<p class="hero-title"><span>Astro</span><span class="i">Quack</span></p>');
+  h = h.replace(/<body([^>]*)>/, `<body$1 data-view="${v}">`);
+  return h;
+}
+if (LUNE_HTML) home = home.replace('<div class="lune-year" id="luneYear"></div>', `<div class="lune-year" id="luneYear">${LUNE_HTML}</div>`).replace('<h3 id="luneTitle" aria-live="polite"></h3>', `<h3 id="luneTitle" aria-live="polite">${YEAR}</h3>`);
+if (CAL_HTML) home = home.replace(/<h4 id="dayTitle"><\/h4><p class="sub" id="daySub"><\/p><ul class="day-list" id="dayList"><\/ul>/, `<h4 id="dayTitle">I transiti di ${MONTH_NAME}</h4><p class="sub" id="daySub">Ingressi, retrogradazioni e lune del mese</p><ul class="day-list" id="dayList">${CAL_HTML}</ul>`);
+fs.writeFileSync(path.join(OUT, 'index.html'), pageFor('home'));
+for (const v of Object.keys(SEO_VIEWS)) if (v !== 'home') fs.writeFileSync(path.join(OUT, `${v}.html`), pageFor(v));
 
 // ---------- pagine degli articoli ----------
 fs.mkdirSync(path.join(OUT, 'blog'), { recursive: true });
@@ -162,7 +305,7 @@ for (const p of all) {
       { '@type': 'ListItem', position: 2, name: 'Blog', item: BASE + '/blog' },
       { '@type': 'ListItem', position: 3, name: p.title, item: url }] }] };
   const html = head({ title: `${p.title} · AstroQuack`, desc: excerpt(p), url, image: abs(ogImg(p)), type: 'article', jsonld: ld, noindex: future }) + `
-<body>
+<body class="shell-page">
 ${pageHead('blog')}
 <main class="article">
   <p class="crumbs"><a href="/">AstroQuack</a> › <a href="/blog">Blog</a> › <a href="/blog?rubrica=${esc(r.id)}">${esc(r.name)}</a></p>
@@ -173,7 +316,7 @@ ${pageHead('blog')}
     ${p.excerpt ? `<p class="lede">${esc(p.excerpt)}</p>` : ''}
     <div class="prose">${md(p.body)}</div>
     ${(p.signs || []).length ? `<p class="post-signs">${p.signs.map(i => `<span class="chip-s"><span class="g">${SIGNS[i][1] + VS}</span>${SIGNS[i][0]}</span>`).join('')}</p>` : ''}
-    <div class="post-cta"><p>Vuoi approfondire il tuo cielo?</p><a class="btn" href="/#contattami">Scrivimi</a></div>
+    <div class="post-cta"><p>Vuoi approfondire il tuo cielo?</p><a class="btn" href="/contattami">Scrivimi</a></div>
     ${rel.length ? `<h2 style="margin:44px 0 16px;font-size:2rem">Della stessa rubrica</h2><div class="blog-grid">${rel.map(card).join('')}</div>` : ''}
   </div>
 </main>
@@ -190,7 +333,7 @@ ${pageFoot}
     blogPost: live.map(p => ({ '@type': 'BlogPosting', headline: p.title, url: `${BASE}/blog/${encodeURIComponent(p.slug)}`, datePublished: p.date })) };
   const chips = [{ id: 'tutte', name: 'Tutte' }, ...RUBRICHE].map(r => `<a class="chipf" href="/blog${r.id === 'tutte' ? '' : '?rubrica=' + r.id}" data-r="${r.id}">${esc(r.name)}</a>`).join('');
   const html = head({ title: 'Blog · AstroQuack', desc, url, image: abs('/assets/img/og/paper.jpg'), jsonld: ld }) + `
-<body>
+<body class="shell-page">
 ${pageHead('blog')}
 <main class="blog-page">
   <h1 style="font-size:clamp(2.8rem,6vw,5rem)">Il blog delle <em style="color:var(--pink)">rubriche</em></h1>
@@ -210,9 +353,9 @@ ${pageFoot}
 fs.mkdirSync(path.join(OUT, 'content'), { recursive: true });
 const publicSite = { url: BASE, email: SITE.email, repo: SITE.repo, web3formsKey: SITE.web3formsKey || '', newsletterAction: SITE.newsletterAction || '',
   newsletterEmailField: SITE.newsletterEmailField || 'email', newsletterExtraFields: SITE.newsletterExtraFields || '', social: SITE.social || {} };
-fs.writeFileSync(path.join(OUT, 'content/config.js'), `/* generato da scripts/build.mjs a partire da content/settings.json */\nconst SITE=${JSON.stringify(publicSite)};\n`);
+fs.writeFileSync(path.join(OUT, 'content/config.js'), `/* generato da scripts/build.mjs a partire da content/settings.json */\nconst SITE=${JSON.stringify(publicSite)};\nwindow.SEO_VIEWS=${JSON.stringify(Object.fromEntries(Object.entries(SEO_VIEWS).map(([k, x]) => [k, { title: x.title, desc: x.desc }])))};\n`);
 fs.writeFileSync(path.join(OUT, 'content/posts.js'), `/* generato da scripts/build.mjs a partire da content/posts/ */\nwindow.POSTS=${JSON.stringify(all.map(({ title, slug, rubrica, date, status, signs, excerpt, body }) => ({ title, slug, rubrica, date, status, signs, excerpt, body })))};\n`);
-fs.writeFileSync(path.join(OUT, 'content/events.js'), `/* generato da scripts/build.mjs a partire da content/events.json */\nwindow.EVENTS=${JSON.stringify(EVENTS)};\nconst EVENTS=window.EVENTS;\n`);
+fs.writeFileSync(path.join(OUT, 'content/events.js'), `/* generato da scripts/build.mjs a partire da content/events/ e content/oroscopo/ */\nwindow.EVENTS=${JSON.stringify(EVENTS)};\nconst EVENTS=window.EVENTS;\nwindow.OROSCOPO=${JSON.stringify(OROSCOPO)};\n`);
 
 // ---------- manifest per l’installazione su telefono ----------
 fs.writeFileSync(path.join(OUT, 'manifest.webmanifest'), JSON.stringify({
@@ -228,7 +371,7 @@ fs.writeFileSync(path.join(OUT, 'manifest.webmanifest'), JSON.stringify({
   const today = new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Rome' }).format(now);
   const url = `${BASE}/privacy`;
   const html = head({ title: 'Informativa privacy · AstroQuack', desc: 'Come AstroQuack tratta i dati personali di chi visita il sito, scrive dal modulo di contatto o si iscrive alla newsletter.', url, image: abs('/assets/img/og/home.jpg'), jsonld: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Informativa privacy', url } }) + `
-<body>
+<body class="shell-page">
 ${pageHead('')}
 <main class="article prose-page">
   <h1 class="post-title">Informativa <em style="color:var(--pink)">privacy</em></h1>
@@ -262,7 +405,7 @@ ${pageFoot}
 
 // ---------- pagina non trovata ----------
 fs.writeFileSync(path.join(OUT, '404.html'), head({ title: 'Pagina non trovata · AstroQuack', desc: 'Questa pagina si è persa tra le stelle.', url: `${BASE}/404`, image: abs('/assets/img/og/home.jpg'), jsonld: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Pagina non trovata' }, noindex: true }) + `
-<body class="night" style="min-height:100svh;display:flex;flex-direction:column">
+<body class="shell-page night" style="min-height:100svh;display:flex;flex-direction:column">
 ${pageHead('')}
 <main class="article" style="flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center">
   <p class="post-meta" style="font-size:1rem">errore 404</p>
@@ -278,6 +421,7 @@ ${pageFoot}
 const day = d => new Date(d).toISOString().slice(0, 10);
 const urls = [
   { loc: `${BASE}/`, lastmod: day(now), pri: '1.0' },
+  ...Object.entries(SEO_VIEWS).filter(([k]) => k !== 'home').map(([k, x]) => ({ loc: BASE + x.path, lastmod: day(now), pri: ['tema', 'lune', 'calendario', 'cielo', 'sinastria'].includes(k) ? '0.9' : '0.6' })),
   { loc: `${BASE}/blog`, lastmod: live[0] ? day(live[0].updated || live[0].date) : day(now), pri: '0.8' },
   ...live.map(p => ({ loc: `${BASE}/blog/${encodeURIComponent(p.slug)}`, lastmod: day(p.updated || p.date), pri: '0.7' })),
   { loc: `${BASE}/privacy`, lastmod: day(now), pri: '0.2' }];
