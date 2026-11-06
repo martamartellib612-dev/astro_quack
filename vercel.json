@@ -152,5 +152,18 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "astroquack-qqiq.vercel.app"
+        }
+      ],
+      "destination": "https://www.astroquack.it/:path*",
+      "permanent": true
+    }
   ]
 }
